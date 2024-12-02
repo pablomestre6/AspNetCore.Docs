@@ -2,7 +2,7 @@
 title: ASP.NET Core SignalR clients
 author: bradygaster
 description: Learn which features are supported by the various ASP.NET Core SignalR clients.
-ms.author: bradyg
+ms.author: wpickett
 ms.custom: mvc
 ms.date: 11/12/2019
 uid: signalr/client-features
@@ -40,9 +40,11 @@ The table below shows the features and support for the clients that offer real-t
 | Long Polling Transport |2.1.0|1.0.0|1.0.0|3.0.0|
 | JSON Hub Protocol |2.1.0|1.0.0|1.0.0|1.0.0|
 | MessagePack Hub Protocol |2.1.0|1.0.0|1.0.0|5.0.0|
-| Client Results |7.0.0|7.0.0|7.0.0|❌|
+| Client Results |7.0.0|7.0.0|7.0.0|7.0.0|
 
 Support for enabling additional client features is tracked in [our issue tracker](https://github.com/dotnet/AspNetCore/issues).
+
+[!INCLUDE[](~/includes/SignalR/es6.md)]
 
 ## Additional resources
 

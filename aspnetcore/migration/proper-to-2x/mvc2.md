@@ -2,7 +2,7 @@
 title: Migrate from ASP.NET to ASP.NET Core 2.0
 author: isaacrlevin
 description: Receive guidance for migrating existing ASP.NET MVC or Web API applications to ASP.NET Core 2.0.
-ms.author: scaddie
+ms.author: wpickett
 ms.custom: mvc
 ms.date: 10/24/2018
 uid: migration/mvc2
@@ -66,7 +66,7 @@ ASP.NET Core uses a similar approach, but doesn't rely on OWIN to handle the ent
 
 `Startup` must include a `Configure` method. In `Configure`, add the necessary middleware to the pipeline. In the following example (from the default web site template), several extension methods are used to configure the pipeline with support for:
 
-* [BrowserLink](https://vswebessentials.com/features/browserlink)
+* BrowserLink
 * Error pages
 * Static files
 * ASP.NET Core MVC

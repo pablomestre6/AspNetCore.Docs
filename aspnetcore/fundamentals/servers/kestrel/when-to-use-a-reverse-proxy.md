@@ -1,15 +1,17 @@
 ---
 title: When to use a reverse proxy with the ASP.NET Core Kestrel web server
-author: rick-anderson
+author: tdykstra
 description: Learn about when to use a reverse proxy in front of Kestrel, the cross-platform web server for ASP.NET Core.
 monikerRange: '>= aspnetcore-5.0'
-ms.author: riande
+ms.author: tdykstra
 ms.custom: mvc
 ms.date: 04/01/2022
 uid: fundamentals/servers/kestrel/when-to-use-a-reverse-proxy
 ---
 
 # When to use Kestrel with a reverse proxy
+
+[!INCLUDE[](~/includes/not-latest-version.md)]
 
 Kestrel can be used by itself or with a *reverse proxy server*. A reverse proxy server receives HTTP requests from the network and forwards them to Kestrel. Examples of a reverse proxy server include:
 
@@ -35,9 +37,9 @@ Even if a reverse proxy server isn't required, using a reverse proxy server migh
 A reverse proxy:
 
 * Can limit the exposed public surface area of the apps that it hosts.
-* Provide an additional layer of configuration and defense.
+* Provides an additional layer of configuration and defense-in-depth cybersecurity.
 * Might integrate better with existing infrastructure.
-* Simplify load balancing and secure communication (HTTPS) configuration. Only the reverse proxy server requires an X.509 certificate, and that server can communicate with the app's servers on the internal network using plain HTTP.
+* Simplifies load balancing and secure communication (HTTPS) configuration. Only the reverse proxy server requires the X.509 certificate for the public domain(s). That server can communicate with the app's servers on the internal network using plain HTTP or HTTPS with locally managed certificates. Internal HTTPS increases security but adds significant overhead.
 
 > [!WARNING]
 > Hosting in a reverse proxy configuration requires [host filtering](xref:fundamentals/servers/kestrel/host-filtering).

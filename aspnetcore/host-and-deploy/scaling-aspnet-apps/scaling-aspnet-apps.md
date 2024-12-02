@@ -9,6 +9,8 @@ ms.date: 8/31/2022
 ---
 # Deploying and scaling an ASP.NET Core app on Azure Container Apps
 
+[!INCLUDE[](~/includes/not-latest-version.md)]
+
 Apps deployed to Azure that experience intermittent high demand benefit from scalability to meet demand. Scalable apps can scale out to ensure capacity during workload peaks and then scale down automatically when the peak drops, which can lower costs. Horizontal scaling (scaling out) adds new instances of a resource, such as VMs or database replicas. This article demonstrates how to deploy a horizontally scalable ASP.NET Core app to [Azure container apps](/azure/container-apps/overview) by completing the following tasks:
 
 1. [Set up the sample project](#set-up-the-sample-project)
@@ -40,7 +42,7 @@ git clone "https://github.com/dotnet/AspNetCore.Docs.Samples.git"
 
 Navigate to the `/tutorials/scalable-razor-apps/start` folder and open the `ScalableRazor.csproj`.
 
-The sample app uses a search form to browse GitHub repositories by name. The form relies on the built-in ASP.NET Core data protection services to handle anti-forgery concerns. By default, when the app scales horizontally on Container Apps, the data protection service throws an exception. 
+The sample app uses a search form to browse GitHub repositories by name. The form relies on the built-in ASP.NET Core data protection services to handle antiforgery concerns. By default, when the app scales horizontally on Container Apps, the data protection service throws an exception. 
 
 #### Test the app
 
@@ -328,3 +330,5 @@ Repeat the previous steps to assign a role to your account so that it can access
 You may need to wait again for this role assignment to propagate.
 
 You can then return to Visual Studio and run the app locally. The code should continue to function as expected. `DefaultAzureCredential` uses your existing credentials from Visual Studio or the Azure CLI.
+
+[!INCLUDE[](~/includes/reliableWAP_H2.md)]

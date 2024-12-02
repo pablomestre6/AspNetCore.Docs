@@ -3,11 +3,15 @@ title: Use HttpContext in ASP.NET Core
 author: jamesnk
 description: How to use HttpContext in ASP.NET Core.
 monikerRange: '>= aspnetcore-3.1'
-ms.author: jamesnk
-ms.date: 01/31/2022
+ms.author: wpickett
+ms.date: 10/07/2024
 uid: fundamentals/use-httpcontext
 ---
+<!-- ms.sfi.ropc: t -->
+
 # Use HttpContext in ASP.NET Core
+
+[!INCLUDE[](~/includes/not-latest-version.md)]
 
 <xref:Microsoft.AspNetCore.Http.HttpContext> encapsulates all information about an individual HTTP request and response. An `HttpContext` instance is initialized when an HTTP request is received. The `HttpContext` instance is accessible by middleware and app frameworks such as Web API controllers, Razor Pages, SignalR, gRPC, and more.
 
@@ -26,7 +30,7 @@ Commonly used members on `HttpRequest` include:
 |<xref:Microsoft.AspNetCore.Http.HttpRequest.Headers?displayProperty=nameWithType>|A collection of request headers.|`user-agent=Edge`<br />`x-custom-header=MyValue`|
 |<xref:Microsoft.AspNetCore.Http.HttpRequest.RouteValues?displayProperty=nameWithType>|A collection of route values. The collection is set when the request is matched to a route.|`language=en`<br />`article=getstarted`|
 |<xref:Microsoft.AspNetCore.Http.HttpRequest.Query?displayProperty=nameWithType>|A collection of query values parsed from <xref:Microsoft.AspNetCore.Http.HttpRequest.QueryString>.|`filter=hello`<br />`page=1`|
-|[HttpRequest.ReadFormAsync()](xref:Microsoft.AspNetCore.Http.HttpRequest.ReadFormAsync(System.Threading.CancellationToken))|A method that reads the request body as a form and returns a form values collection. For information about why `ReadFormAsync` should be used to access form data, see [Prefer ReadFormAsync over Request.Form](xref:performance/performance-best-practices#prefer-readformasync-over-requestform).|`email=user@contoso.com`<br />`password=TNkt4taM`|
+|[HttpRequest.ReadFormAsync()](xref:Microsoft.AspNetCore.Http.HttpRequest.ReadFormAsync(System.Threading.CancellationToken))|A method that reads the request body as a form and returns a form values collection. For information about why `ReadFormAsync` should be used to access form data, see [Prefer ReadFormAsync over Request.Form](xref:fundamentals/best-practices#prefer-readformasync-over-requestform).|`email=user@contoso.com`|
 |<xref:Microsoft.AspNetCore.Http.HttpRequest.Body?displayProperty=nameWithType>|A <xref:System.IO.Stream> for reading the request body.|UTF-8 JSON payload|
 
 ### Get request headers
@@ -37,6 +41,8 @@ Commonly used members on `HttpRequest` include:
 * The header collection also has properties for getting and setting commonly used HTTP headers. The properties provide a fast, IntelliSense driven way to access headers.
 
 [!code-csharp[](use-http-context/samples/Program.cs?name=snippet_RequestHeaders&highlight=6-7)]
+
+For information on efficiently handling headers that appear more than once, see [A brief look at StringValues](https://andrewlock.net/a-brief-look-at-stringvalues/).
 
 ### Read request body
 
@@ -98,6 +104,9 @@ Commonly used members on `HttpResponse` include:
 An app can't modify headers after the response has started. Once the response starts, the headers are sent to the client. A response is started by flushing the response body or calling <xref:Microsoft.AspNetCore.Http.HttpResponse.StartAsync(System.Threading.CancellationToken)?displayProperty=nameWithType>. The <xref:Microsoft.AspNetCore.Http.HttpResponse.HasStarted?displayProperty=nameWithType> property indicates whether the response has started. An error is thrown when attempting to modify headers after the response has started:
 
 > System.InvalidOperationException: Headers are read-only, response has already started.
+
+> [!NOTE]
+> Unless response buffering is enabled, all write operations (for example, <xref:Microsoft.AspNetCore.Http.HttpResponseWritingExtensions.WriteAsync%2A>) flush the response body internally and mark the response as started. Response buffering is disabled by default.
 
 ### Write response body
 
@@ -185,7 +194,7 @@ This article primarily discusses using `HttpContext` in request and response flo
 
 The following sample logs GitHub branches when requested from the `/branch` endpoint:
 
-[!code-csharp[](~/fundamentals/http-context/samples/6.x/HttpContextInBackgroundThread/Program.cs?highlight=26-45)]
+[!code-csharp[](~/fundamentals/http-context/samples/6.x/HttpContextInBackgroundThread/Program.cs?highlight=26-46)]
 
 The GitHub API requires two headers. The `User-Agent` header is added dynamically by the `UserAgentHeaderHandler`:
 

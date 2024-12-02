@@ -4,16 +4,20 @@ author: rick-anderson
 description: Learn about the new features in ASP.NET Core 7.0.
 ms.author: riande
 ms.custom: mvc
-ms.date: 10/14/2022
+ms.date: 11/07/2022
 uid: aspnetcore-7
 ---
-# What's new in ASP.NET Core 7.0 preview
+# What's new in ASP.NET Core 7.0
 
 This article highlights the most significant changes in ASP.NET Core 7.0 with links to relevant documentation.
 
 ## Rate limiting middleware in ASP.NET Core
 
 The `Microsoft.AspNetCore.RateLimiting` middleware provides rate limiting middleware. Apps configure rate limiting policies and then attach the policies to endpoints. For more information, see <xref:performance/rate-limit?view=aspnetcore-7.0&preserve-view=true>.
+
+## Authentication uses single scheme as DefaultScheme
+
+As part of the work to simplify authentication, when there's only a single authentication scheme registered, it's automatically used as the <xref:Microsoft.AspNetCore.Authentication.AuthenticationOptions.DefaultScheme> and doesn't need to be specified. For more information, see [DefaultScheme](xref:security/authentication/index#defaultscheme).
 
 ## MVC and Razor pages
 
@@ -97,10 +101,6 @@ In ASP.NET 7, binding query strings to an array of primitive types, string array
 
 Binding query strings or header values to an array of complex types is supported when the type has `TryParse` implemented. For more information, see [Bind arrays and string values from headers and query strings](xref:fundamentals/minimal-apis?view=aspnetcore-7.0&preserve-view=true#bindar).
 
-### Provide endpoint descriptions and summaries
-
-Minimal APIs now support annotating operations with descriptions and summaries for OpenAPI spec generation. You can call extension methods <xref:Microsoft.AspNetCore.Http.OpenApiRouteHandlerBuilderExtensions.WithDescription%2A> and <xref:Microsoft.AspNetCore.Http.OpenApiRouteHandlerBuilderExtensions.WithSummary%2A> or use attributes [[EndpointDescription]](xref:Microsoft.AspNetCore.Http.EndpointDescriptionAttribute) and [[EndpointSummary]](xref:Microsoft.AspNetCore.Http.EndpointSummaryAttribute)).
-
 For more information, see [Add endpoint summary or description](xref:fundamentals/minimal-apis#add-endpoint-summary-or-description).
 
 ### Bind the request body as a `Stream` or `PipeReader`
@@ -140,6 +140,19 @@ The following code uses the [`Ok<TValue>`](/dotnet/api/microsoft.aspnetcore.http
 
 For more information, see [`IResult` implementation types](xref:fundamentals/minimal-apis/test-min-api#iit7).
 
+### New HttpResult interfaces
+
+The following interfaces in the <xref:Microsoft.AspNetCore.Http> namespace provide a way to detect the `IResult` type at runtime, which is a common pattern in filter implementations:
+
+* <xref:Microsoft.AspNetCore.Http.IContentTypeHttpResult>
+* <xref:Microsoft.AspNetCore.Http.IFileHttpResult>
+* <xref:Microsoft.AspNetCore.Http.INestedHttpResult>
+* <xref:Microsoft.AspNetCore.Http.IStatusCodeHttpResult>
+* <xref:Microsoft.AspNetCore.Http.IValueHttpResult>
+* <xref:Microsoft.AspNetCore.Http.IValueHttpResult%601>
+
+For more information, see [IHttpResult interfaces](xref:fundamentals/minimal-apis/responses#httpresultinterfaces7).
+
 ### OpenAPI improvements for minimal APIs
 
 <a name="openapinuget"></a>
@@ -156,11 +169,11 @@ The [`WithOpenApi`](https://github.com/dotnet/aspnetcore/blob/8a4b4deb09c04134f2
 
 [!code-csharp[](~/fundamentals/minimal-apis/7.0-samples/todo/Program.cs?name=snippet_withopenapi2&highlight=9-99)]
 
-#### Exclude Open API description
+#### Provide endpoint descriptions and summaries
 
-In the following sample, the `/skipme` endpoint is excluded from generating an OpenAPI description:
+Minimal APIs now support annotating operations with descriptions and summaries for OpenAPI spec generation. You can call extension methods <xref:Microsoft.AspNetCore.Http.OpenApiRouteHandlerBuilderExtensions.WithDescription%2A> and <xref:Microsoft.AspNetCore.Http.OpenApiRouteHandlerBuilderExtensions.WithSummary%2A> or use attributes [[EndpointDescription]](xref:Microsoft.AspNetCore.Http.EndpointDescriptionAttribute) and [[EndpointSummary]](xref:Microsoft.AspNetCore.Http.EndpointSummaryAttribute)).
 
-[!code-csharp[](~/fundamentals/minimal-apis/7.0-samples/WebMinAPIs/Program.cs?name=snippet_swag2&highlight=20-21)]
+For more information, see [OpenAPI in minimal API apps](xref:fundamentals/openapi/aspnetcore-openapi?view=aspnetcore-7.0)
 
 ### File uploads using IFormFile and IFormFileCollection
 
@@ -182,7 +195,11 @@ The [`[AsParameters]` attribute](xref:Microsoft.AspNetCore.Http.AsParametersAttr
 
 The problem details service implements the <xref:Microsoft.AspNetCore.Http.IProblemDetailsService> interface, which supports creating [Problem Details for HTTP APIs](https://www.rfc-editor.org/rfc/rfc7807.html).
 
-For more information, see [Problem details service](xref:web-api/handle-errors##pds7)
+For more information, see [Problem details service](xref:web-api/handle-errors#pds7).
+
+### Route groups
+
+[!INCLUDE[](~/includes/route-groups.md)]
 
 ## gRPC
 
@@ -192,8 +209,44 @@ gRPC JSON transcoding is an extension for ASP.NET Core that creates RESTful JSON
 
 * Apps to call gRPC services with familiar HTTP concepts.
 * ASP.NET Core gRPC apps to support both gRPC and RESTful JSON APIs without replicating functionality.
+* Experimental support for generating OpenAPI from transcoded RESTful APIs by integrating with [Swashbuckle](xref:tutorials/get-started-with-swashbuckle).
 
-For more information, see [gRPC JSON transcoding in ASP.NET Core gRPC apps](xref:grpc/json-transcoding?view=aspnetcore-7.0)
+For more information, see [gRPC JSON transcoding in ASP.NET Core gRPC apps](xref:grpc/json-transcoding?view=aspnetcore-7.0) and <xref:grpc/json-transcoding-openapi>.
+
+### gRPC health checks in ASP.NET Core
+
+The [gRPC health checking protocol](https://github.com/grpc/grpc/blob/master/doc/health-checking.md) is a standard for reporting the health of gRPC server apps. An app exposes health checks as a gRPC service. They are typically used with an external monitoring service to check the status of an app.
+
+gRPC ASP.NET Core has added built-in support for gRPC health checks with the [`Grpc.AspNetCore.HealthChecks`](https://www.nuget.org/packages/Grpc.AspNetCore.HealthChecks) package. Results from [.NET health checks](xref:host-and-deploy/health-checks) are reported to callers.
+
+For more information, see <xref:grpc/health-checks>.
+
+### Improved call credentials support
+
+Call credentials are the recommended way to configure a gRPC client to send an auth token to the server. gRPC clients support two new features to make call credentials easier to use:
+
+* Support for call credentials with plaintext connections. Previously, a gRPC call only sent call credentials if the connection was secured with TLS. A new setting on `GrpcChannelOptions`, called `UnsafeUseInsecureChannelCallCredentials`, allows this behavior to be customized. There are security implications to not securing a connection with TLS.
+* A new method called `AddCallCredentials` is available with the [gRPC client factory](xref:grpc/clientfactory). `AddCallCredentials` is a quick way to configure call credentials for a gRPC client and integrates well with dependency injection (DI).
+
+The following code configures the gRPC client factory to send `Authorization` metadata:
+
+```csharp
+builder.Services
+    .AddGrpcClient<Greeter.GreeterClient>(o =>
+    {
+       o.Address = new Uri("https://localhost:5001");
+    })
+    .AddCallCredentials((context, metadata) =>
+    {
+       if (!string.IsNullOrEmpty(_token))
+       {
+          metadata.Add("Authorization", $"Bearer {_token}");
+       }
+       return Task.CompletedTask;
+    });
+```
+
+For more information, see [Configure a bearer token with the gRPC client factory](xref:grpc/authn-and-authz#bearer-token-with-grpc-client-factory).
 
 ## SignalR
 
@@ -237,6 +290,16 @@ For more information, see <xref:blazor/components/index?view=aspnetcore-7.0#blaz
 
 ### Bind modifiers (`@bind:after`, `@bind:get`, `@bind:set`)
 
+> [!IMPORTANT]
+> The `@bind:after`/`@bind:get`/`@bind:set` features are receiving further updates at this time. To take advantage of the latest updates, confirm that you've installed the [latest SDK](https://dotnet.microsoft.com/download/dotnet/7.0).
+>
+> Using an event callback parameter (`[Parameter] public EventCallback<string> ValueChanged { get; set; }`) isn't supported. Instead, pass an <xref:System.Action>-returning or <xref:System.Threading.Tasks.Task>-returning method to `@bind:set`/`@bind:after`.
+>
+> For more information, see the following resources:
+>
+> * [Blazor `@bind:after` not working on .NET 7 RTM release (dotnet/aspnetcore #44957)](https://github.com/dotnet/aspnetcore/issues/44957)
+> * [`BindGetSetAfter701` sample app (javiercn/BindGetSetAfter701 GitHub repository)](https://github.com/javiercn/BindGetSetAfter701)
+
 In .NET 7, you can run asynchronous logic after a binding event has completed using the new `@bind:after` modifier. In the following example, the `PerformSearch` asynchronous method runs automatically after any changes to the search text are detected:
 
 ```razor
@@ -259,24 +322,65 @@ In .NET 7, it's also easier to set up binding for component parameters. Componen
 
 The `@bind:get` and `@bind:set` modifiers are always used together.
 
-Example:
+Examples:
 
 ```razor
-<input @bind:get="Value" @bind:set="ValueChanged" />
+@* Elements *@
+
+<input type="text" @bind="text" @bind:after="() => { }" />
+
+<input type="text" @bind:get="text" @bind:set="(value) => { }" />
+
+<input type="text" @bind="text" @bind:after="AfterAsync" />
+
+<input type="text" @bind:get="text" @bind:set="SetAsync" />
+
+<input type="text" @bind="text" @bind:after="() => { }" />
+
+<input type="text" @bind:get="text" @bind:set="(value) => { }" />
+
+<input type="text" @bind="text" @bind:after="AfterAsync" />
+
+<input type="text" @bind:get="text" @bind:set="SetAsync" />
+
+@* Components *@
+
+<InputText @bind-Value="text" @bind-Value:after="() => { }" />
+
+<InputText @bind-Value:get="text" @bind-Value:set="(value) => { }" />
+
+<InputText @bind-Value="text" @bind-Value:after="AfterAsync" />
+
+<InputText @bind-Value:get="text" @bind-Value:set="SetAsync" />
+
+<InputText @bind-Value="text" @bind-Value:after="() => { }" />
+
+<InputText @bind-Value:get="text" @bind-Value:set="(value) => { }" />
+
+<InputText @bind-Value="text" @bind-Value:after="AfterAsync" />
+
+<InputText @bind-Value:get="text" @bind-Value:set="SetAsync" />
 
 @code {
-    [Parameter]
-    public TValue? Value { get; set; }
+    private string text = "";
 
-    [Parameter]
-    public EventCallback<TValue> ValueChanged { get; set; }
+    private void After(){}
+    private void Set() {}
+    private Task AfterAsync() { return Task.CompletedTask; }
+    private Task SetAsync(string value) { return Task.CompletedTask; }
 }
 ```
+
+For more information on the `InputText` component, see <xref:blazor/forms/input-components>.
+
+<!--
 
 For more information, see the following content in the *Data binding* article:
 
 * [Introduction](xref:blazor/components/data-binding?view=aspnetcore-7.0)
 * [Bind across more than two components](xref:blazor/components/data-binding?view=aspnetcore-7.0#bind-across-more-than-two-components)
+
+-->
 
 ### Hot Reload improvements
 
@@ -333,13 +437,13 @@ For more information, see [Developers targeting browser-wasm can use Web Crypto 
 
 You can now inject services into custom validation attributes. Blazor sets up the `ValidationContext` so that it can be used as a service provider.
 
-For more information, see <xref:blazor/forms-and-input-components?view=aspnetcore-7.0#custom-validation-attributes>.
+For more information, see <xref:blazor/forms/validation?view=aspnetcore-7.0#custom-validation-attributes>.
 
 ### `Input*` components outside of an `EditContext`/`EditForm`
 
 The built-in input components are now supported outside of a form in Razor component markup.
 
-For more information, see <xref:blazor/forms-and-input-components?view=aspnetcore-7.0#built-in-input-components>.
+For more information, see <xref:blazor/forms/input-components?view=aspnetcore-7.0>.
 
 ### Project template changes
 
@@ -353,7 +457,7 @@ Several additional changes were made to the Blazor project templates. It isn't f
 
 The new `QuickGrid` component provides a convenient data grid component for most common requirements and as a reference architecture and performance baseline for anyone building Blazor data grid components.
 
-For more information, see <xref:blazor/components/index?view=aspnetcore-7.0#quickgrid-component>.
+For more information, see <xref:blazor/components/quickgrid>.
 
 Live demo: [QuickGrid for Blazor sample app](https://aspnet.github.io/quickgridsamples/)
 
@@ -387,24 +491,14 @@ To help diagnose authentication issues in Blazor WebAssembly apps, detailed logg
 
 For more information, see <xref:blazor/fundamentals/logging?view=aspnetcore-7.0#blazor-webassembly-authentication-logging>.
 
-<!--
+### JavaScript interop on WebAssembly
 
-    IN PROGRESS
+JavaScript `[JSImport]`/`[JSExport]` interop API is a new low-level mechanism for using .NET in Blazor WebAssembly and JavaScript-based apps. With this new JavaScript interop capability, you can invoke .NET code from JavaScript using the .NET WebAssembly runtime and call into JavaScript functionality from .NET without any dependency on the Blazor UI component model.
 
-### .NET JavaScript interop on WebAssembly
+For more information:
 
-.NET JavaScript `[JSImport]`/`[JSExport]` interop API is a new low-level mechanism for using .NET in Blazor WebAssembly and JavaScript-based apps. With this new JavaScript interop capability, you can invoke .NET code from JavaScript using the .NET WebAssembly runtime and call into JavaScript functionality from .NET without any dependency on the Blazor UI component model.
-
-For more information, see the following articles:
-
-* <xref:blazor/js-interop/import-export-interop>: Pertains only to Blazor WebAssebmly apps.
-* <xref:client-side/import-export-interop>: Pertains only to JavaScript apps that don't depend on the Blazor UI component model.
-
-Under consideration for docs ...
-
-[Blog Post (WebAssembly multithreading experimental)](https://devblogs.microsoft.com/dotnet/asp-net-core-updates-in-dotnet-7-rc-2/#webassembly-multithreading-experimental)
-
--->
+* <xref:blazor/js-interop/import-export-interop>: Pertains only to Blazor WebAssembly apps.
+* <xref:client-side/dotnet-interop/index>: Pertains only to JavaScript apps that don't depend on the Blazor UI component model.
 
 ### Conditional registration of the authentication state provider
 
@@ -423,10 +517,10 @@ In the preceding example, `ExternalAuthStateProvider` is the developer's service
 
 New features in the `wasm-tools` workload for .NET 7 that help improve performance and handle exceptions:
 
-* [WebAssembly Single Instruction, Multiple Data (SIMD)](https://github.com/WebAssembly/simd/blob/master/proposals/simd/SIMD.md) support (only with AOT, not supported by Apple Safari)
+* [WebAssembly Single Instruction, Multiple Data (SIMD)](https://wikipedia.org/wiki/Single_instruction,_multiple_data) support (only with AOT, not supported by Apple Safari)
 * WebAssembly exception handling support
 
-For more information, see <xref:blazor/tooling?view=aspnetcore-7.0#net-webassembly-build-tools>.
+For more information, see <xref:blazor/tooling/webassembly?view=aspnetcore-7.0>.
 
 ## Blazor Hybrid
 
@@ -445,6 +539,37 @@ New guidance is available for Blazor Hybrid security scenarios. For more informa
 
 ## Performance
 
+### Output caching middleware
+
+Output caching is a new middleware that stores responses from a web app and serves them from a cache rather than computing them every time. Output caching differs from [response caching](xref:performance/caching/overview#response-caching) in the following ways:
+
+* The caching behavior is configurable on the server.
+* Cache entries can be programmatically invalidated.
+* Resource locking mitigates the risk of [cache stampede](https://en.wikipedia.org/wiki/Cache_stampede) and [thundering herd](https://en.wikipedia.org/wiki/Thundering_herd_problem).
+* Cache revalidation means the server can return a `304 Not Modified` HTTP status code instead of a cached response body.
+* The cache storage medium is extensible.
+
+For more information, see [Overview of caching](xref:performance/caching/overview) and [Output caching middleware](xref:performance/caching/output).
+
+### HTTP/3 improvements
+
+This release:
+
+* Makes HTTP/3 fully supported by ASP.NET Core, it's no longer experimental.
+* Improves Kestrel's support for HTTP/3. The two main areas of improvement are feature parity with HTTP/1.1 and HTTP/2, and performance.
+* Provides full support for <xref:Microsoft.AspNetCore.Hosting.ListenOptionsHttpsExtensions.UseHttps(Microsoft.AspNetCore.Server.Kestrel.Core.ListenOptions,System.Security.Cryptography.X509Certificates.X509Certificate2)> with HTTP/3. Kestrel offers advanced options for configuring connection certificates, such as hooking into [Server Name Indication (SNI)](https://wikipedia.org/wiki/Server_Name_Indication).
+* Adds support for HTTP/3 on [HTTP.sys](xref:fundamentals/servers/httpsys) and [IIS](xref:host-and-deploy/iis/modules).
+
+The following example shows how to use an SNI callback to resolve TLS options:
+
+:::code language="csharp" source="~/release-notes/sample/Program7.cs" id="snippet_1":::
+
+Significant work was done in .NET 7 to reduce HTTP/3 allocations. You can see some of those improvements in the following GitHub PR's:
+
+* [HTTP/3: Avoid per-request cancellation token allocations](https://github.com/dotnet/aspnetcore/pull/42685)
+* [HTTP/3: Avoid ConnectionAbortedException allocations](https://github.com/dotnet/aspnetcore/pull/42708)
+* [HTTP/3: ValueTask pooling](https://github.com/dotnet/aspnetcore/pull/42760)
+
 ### HTTP/2 Performance improvements
 
 .NET 7 introduces a significant re-architecture of how Kestrel processes HTTP/2 requests. ASP.NET Core apps with busy HTTP/2 connections will experience reduced CPU usage and higher throughput.
@@ -456,6 +581,19 @@ One place where these improvements can be noticed is in gRPC, a popular RPC fram
 ![gRPC server streaming performance](https://user-images.githubusercontent.com/219224/177910504-e93579b4-02e4-4079-8a8c-d9d24857aabf.png)
 
 Changes were made in the HTTP/2 frame writing code that improves performance when there are multiple streams trying to write data on a single HTTP/2 connection. We now dispatch TLS work to the thread pool and more quickly release a write lock that other streams can acquire to write their data. The reduction in wait times can yield significant performance improvements in cases where there is contention for this write lock. A gRPC benchmark with 70 streams on a single connection (with TLS) showed a ~15% improvement in requests per second (RPS) with this change.
+
+### Http/2 WebSockets support
+
+.NET 7 introduces WebSockets over HTTP/2 support for Kestrel, the SignalR JavaScript client, and SignalR with Blazor WebAssembly.
+
+Using WebSockets over HTTP/2 takes advantage of new features such as:
+
+* Header compression.
+* Multiplexing, which reduces the time and resources needed when making multiple requests to the server.
+
+These supported features are available in Kestrel on all HTTP/2 enabled platforms. The version negotiation is automatic in browsers and Kestrel, so no new APIs are needed.
+
+For more information, see [Http/2 WebSockets support](xref:fundamentals/websockets?view=aspnetcore-7.0#http2-websockets-support).
 
 ### Kestrel performance improvements on high core machines
 
@@ -481,9 +619,13 @@ The [`ServerReady`](https://github.com/dotnet/aspnetcore/blob/v7.0.0-preview.5.2
 
 Shadow copying app assemblies to the [ASP.NET Core Module (ANCM)](xref:host-and-deploy/aspnet-core-module) for IIS can provide a better end user experience than stopping the app by deploying an [app offline file](xref:host-and-deploy/iis/app-offline).
 
-For more information, see [Shadow copying in IIS](xref:host-and-deploy/iis/advanced?view=aspnetcore-7.0#shadow-copy)
+For more information, see [Shadow copying in IIS](xref:host-and-deploy/iis/advanced?view=aspnetcore-7.0#shadow-copy).
 
 ## Miscellaneous
+
+### Kestrel full certificate chain improvements
+
+[HttpsConnectionAdapterOptions](/dotnet/api/microsoft.aspnetcore.server.kestrel.https.httpsconnectionadapteroptions?view=aspnetcore-7.0&preserve-view=true) has a new [ServerCertificateChain](/dotnet/api/microsoft.aspnetcore.server.kestrel.https.httpsconnectionadapteroptions.servercertificatechain?view=aspnetcore-7.0&preserve-view=true#microsoft-aspnetcore-server-kestrel-https-httpsconnectionadapteroptions-servercertificatechain) property of type [X509Certificate2Collection](/dotnet/api/system.security.cryptography.x509certificates.x509certificate2collection), which makes it easier to validate certificate chains by allowing a full chain including intermediate certificates to be specified. See [dotnet/aspnetcore#21513](https://github.com/dotnet/aspnetcore/issues/21513) for more details.
 
 ### dotnet watch
 
@@ -495,7 +637,7 @@ Here's an example of what the new output looks like:
 
 ![output for dotnet watch](~/release-notes/aspnetcore-7/static/dnwatch.png)
 
-See [this GitHub pull request](https://github.com/dotnet/sdk/pull/23318) for more information.
+For more information, see [this GitHub pull request](https://github.com/dotnet/sdk/pull/23318).
 
 ### Configure dotnet watch to always restart for rude edits
 

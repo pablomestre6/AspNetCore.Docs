@@ -1,14 +1,16 @@
 ---
 title: .NET Generic Host in ASP.NET Core
-author: rick-anderson
+author: tdykstra
 description: Use .NET Core Generic Host in ASP.NET Core apps.  Generic Host is responsible for app startup and lifetime management.
 monikerRange: '>= aspnetcore-3.1'
-ms.author: riande
+ms.author: tdykstra
 ms.custom: mvc
-ms.date: 11/09/2021
+ms.date: 08/29/2024
 uid: fundamentals/host/generic-host
 ---
 # .NET Generic Host in ASP.NET Core
+
+[!INCLUDE[](~/includes/not-latest-version.md)]
 
 :::moniker range=">= aspnetcore-6.0"
 
@@ -187,7 +189,7 @@ To set this value, use the environment variable or call `UseEnvironment` on `IHo
 
 ### ShutdownTimeout
 
-<xref:Microsoft.Extensions.Hosting.HostOptions.ShutdownTimeout%2A?displayProperty=nameWithType> sets the timeout for <xref:Microsoft.Extensions.Hosting.IHost.StopAsync%2A>. The default value is five seconds.  During the timeout period, the host:
+<xref:Microsoft.Extensions.Hosting.HostOptions.ShutdownTimeout%2A?displayProperty=nameWithType> sets the timeout for <xref:Microsoft.Extensions.Hosting.IHost.StopAsync%2A>. The default value is 30 seconds.  During the timeout period, the host:
 
 * Triggers <xref:Microsoft.Extensions.Hosting.IHostApplicationLifetime.ApplicationStopping%2A?displayProperty=nameWithType>.
 * Attempts to stop hosted services, logging errors for services that fail to stop.
@@ -196,7 +198,7 @@ If the timeout period expires before all of the hosted services stop, any remain
 
 **Key**: `shutdownTimeoutSeconds`  
 **Type**: `int`  
-**Default**: 5 seconds  
+**Default**: 30 seconds  
 **Environment variable**: `{PREFIX_}SHUTDOWNTIMEOUTSECONDS`
 
 To set this value, use the environment variable or configure `HostOptions`. The following example sets the timeout to 20 seconds:
@@ -278,9 +280,9 @@ To set this value, use configuration or call `UseSetting`:
 
 ### HTTPS_Port
 
-The HTTPS redirect port. Used in [enforcing HTTPS](xref:security/enforcing-ssl).
+Set the HTTPS port to redirect to if you get a non-HTTPS connection. Used in [enforcing HTTPS](xref:security/enforcing-ssl). This setting doesn't cause the server to listen on the specified port. That is, it's possible to accidentally redirect requests to an unused port.
 
-**Key**: `https_port`  
+**Key**: `https_port`
 **Type**: `string`  
 **Default**: A default value isn't set.  
 **Environment variable**: `{PREFIX_}HTTPS_PORT`
@@ -289,13 +291,26 @@ To set this value, use configuration or call `UseSetting`:
 
 :::code language="csharp" source="generic-host/samples/6.x/GenericHostSample/Snippets/Program.cs" id="snippet_WebHostBuilderHttpsPort":::
 
+### HTTPS_Ports
+
+The ports to listen on for HTTPS connections.
+
+**Key**: `https_ports`  
+**Type**: `string`  
+**Default**: A default value isn't set.  
+**Environment variable**: `{PREFIX_}HTTPS_PORTS`
+
+To set this value, use configuration or call `UseSetting`:
+
+:::code language="csharp" source="generic-host/samples/6.x/GenericHostSample/Snippets/Program.cs" id="snippet_WebHostBuilderHttpsPorts":::
+
 ### PreferHostingUrls
 
 Indicates whether the host should listen on the URLs configured with the `IWebHostBuilder` instead of those URLs configured with the `IServer` implementation.
 
 **Key**: `preferHostingUrls`  
 **Type**: `bool` (`true`/`1` or `false`/`0`)  
-**Default**: `true`  
+**Default**: `false`  
 **Environment variable**: `{PREFIX_}PREFERHOSTINGURLS`
 
 To set this value, use the environment variable or call `PreferHostingUrls`:
@@ -378,6 +393,8 @@ For more information, see:
 ## Manage the host lifetime
 
 Call methods on the built <xref:Microsoft.Extensions.Hosting.IHost> implementation to start and stop the app. These methods affect all  <xref:Microsoft.Extensions.Hosting.IHostedService> implementations that are registered in the service container.
+
+The difference between `Run*` and `Start*` methods is that `Run*` methods wait for the host to complete before returning, whereas `Start*` methods return immediately. The `Run*` methods are typically used in console apps, whereas the `Start*` methods are typically used in long-running services.
 
 ### Run
 
@@ -766,13 +783,13 @@ Indicates whether the host should listen on the URLs configured with the `IWebHo
 
 **Key**: `preferHostingUrls`  
 **Type**: `bool` (`true`/`1` or `false`/`0`)  
-**Default**: `true`  
+**Default**: `false`  
 **Environment variable**: `{PREFIX_}PREFERHOSTINGURLS`
 
 To set this value, use the environment variable or call `PreferHostingUrls`:
 
 ```csharp
-webBuilder.PreferHostingUrls(false);
+webBuilder.PreferHostingUrls(true);
 ```
 
 ### PreventHostingStartup
@@ -864,6 +881,8 @@ For more information, see:
 ## Manage the host lifetime
 
 Call methods on the built <xref:Microsoft.Extensions.Hosting.IHost> implementation to start and stop the app. These methods affect all  <xref:Microsoft.Extensions.Hosting.IHostedService> implementations that are registered in the service container.
+
+The difference between `Run*` and `Start*` methods is that `Run*` methods wait for the host to complete before returning, whereas `Start*` methods return immediately. The `Run*` methods are typically used in console apps, whereas the `Start*` methods are typically used in long-running services.
 
 ### Run
 
@@ -1271,13 +1290,13 @@ Indicates whether the host should listen on the URLs configured with the `IWebHo
 
 **Key**: `preferHostingUrls`  
 **Type**: `bool` (`true`/`1` or `false`/`0`)  
-**Default**: `true`  
+**Default**: `false`  
 **Environment variable**: `{PREFIX_}PREFERHOSTINGURLS`
 
 To set this value, use the environment variable or call `PreferHostingUrls`:
 
 ```csharp
-webBuilder.PreferHostingUrls(false);
+webBuilder.PreferHostingUrls(true);
 ```
 
 ### PreventHostingStartup
@@ -1369,6 +1388,8 @@ For more information, see:
 ## Manage the host lifetime
 
 Call methods on the built <xref:Microsoft.Extensions.Hosting.IHost> implementation to start and stop the app. These methods affect all  <xref:Microsoft.Extensions.Hosting.IHostedService> implementations that are registered in the service container.
+
+The difference between `Run*` and `Start*` methods is that `Run*` methods wait for the host to complete before returning, whereas `Start*` methods return immediately. The `Run*` methods are typically used in console apps, whereas the `Start*` methods are typically used in long-running services.
 
 ### Run
 

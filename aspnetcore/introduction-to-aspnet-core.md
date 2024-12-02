@@ -1,15 +1,17 @@
 ---
 title: Overview of ASP.NET Core
-author: rick-anderson
+author: tdykstra
 description: Get an overview of ASP.NET Core, a cross-platform, high-performance, open-source framework for building modern, cloud-enabled, Internet-connected apps.
-ms.author: riande
+ms.author: tdykstra
 ms.custom: mvc
-ms.date: 03/02/2022
+ms.date: 10/03/2023
 uid: index
 ---
-# Overview to ASP.NET Core
+# Overview of ASP.NET Core
 
 By [Daniel Roth](https://github.com/danroth27), [Rick Anderson](https://twitter.com/RickAndMSFT), and [Shaun Luttin](https://mvp.microsoft.com/en-us/PublicProfile/5001182)
+
+[!INCLUDE[](~/includes/not-latest-version.md)]
 
 :::moniker range=">= aspnetcore-3.0"
 
@@ -20,7 +22,7 @@ With ASP.NET Core, you can:
 * Build web apps and services, [Internet of Things (IoT)](https://www.microsoft.com/internet-of-things/) apps, and mobile backends.
 * Use your favorite development tools on Windows, macOS, and Linux.
 * Deploy to the cloud or on-premises.
-* Run on [.NET Core](/dotnet/core/introduction).
+* Run on [.NET](/dotnet/core/introduction).
 
 ## Why choose ASP.NET Core?
 
@@ -42,15 +44,15 @@ ASP.NET Core MVC provides features to build [web APIs](xref:tutorials/first-web-
 
 ## Client-side development
 
-ASP.NET Core integrates seamlessly with popular client-side frameworks and libraries, including [Blazor](xref:blazor/index), [Angular](xref:spa/angular), [React](xref:spa/react), and [Bootstrap](https://getbootstrap.com/). For more information, see <xref:blazor/index> and related topics under *Client-side development*.
+ASP.NET Core includes [Blazor](xref:blazor/index) for building richly interactive web UI, and also integrates with other popular frontend JavaScript frameworks like [Angular](/visualstudio/javascript/tutorial-asp-net-core-with-angular), [React](/visualstudio/javascript/tutorial-asp-net-core-with-react), [Vue](/visualstudio/javascript/tutorial-asp-net-core-with-vue), and [Bootstrap](https://getbootstrap.com/). For more information, see <xref:blazor/index> and related topics under *Client-side development*.
 
 <a name="target-framework"></a>
 
 ## ASP.NET Core target frameworks
 
-ASP.NET Core 3.x or later can only target .NET Core. Generally, ASP.NET Core is composed of [.NET Standard](/dotnet/standard/net-standard) libraries. Libraries written with .NET Standard 2.0 run on any [.NET platform that implements .NET Standard 2.0](/dotnet/standard/net-standard#net-implementation-support).
+ASP.NET Core 3.x or later can only target .NET.
 
-There are several advantages to targeting .NET Core, and these advantages increase with each release. Some advantages of .NET Core over .NET Framework include:
+There are several advantages to targeting .NET, and these advantages increase with each release. Some advantages of .NET over .NET Framework include:
 
 * Cross-platform. Runs on Windows, macOS, and Linux.
 * Improved performance
@@ -121,7 +123,7 @@ ASP.NET Core MVC provides features to build [web APIs](xref:tutorials/first-web-
 
 ## Client-side development
 
-ASP.NET Core integrates seamlessly with popular client-side frameworks and libraries, including [Blazor](xref:blazor/index), [Angular](xref:spa/angular), [React](xref:spa/react), and [Bootstrap](https://getbootstrap.com/). For more information, see <xref:blazor/index> and related topics under *Client-side development*.
+ASP.NET Core integrates seamlessly with popular client-side frameworks and libraries, including [Blazor](xref:blazor/index), [Angular](/visualstudio/javascript/tutorial-asp-net-core-with-angular), [React](/visualstudio/javascript/tutorial-asp-net-core-with-react), [Vue](/visualstudio/javascript/tutorial-asp-net-core-with-vue), and [Bootstrap](https://getbootstrap.com/). For more information, see <xref:blazor/index> and related topics under *Client-side development*.
 
 <a name="target-framework"></a>
 
@@ -204,7 +206,7 @@ To change the sample to run the `ExpandDefault` scenario, define the `ExpandDefa
 
 For more information on using [C# preprocessor directives](/dotnet/csharp/language-reference/preprocessor-directives/) to selectively compile sections of code, see [#define (C# Reference)](/dotnet/csharp/language-reference/preprocessor-directives/preprocessor-define) and [#if (C# Reference)](/dotnet/csharp/language-reference/preprocessor-directives/preprocessor-if).
 
-### Regions in sample code
+<!-- ### Regions in sample code
 
 Some sample apps contain sections of code surrounded by [#region](/dotnet/csharp/language-reference/preprocessor-directives/preprocessor-region) and [#endregion](/dotnet/csharp/language-reference/preprocessor-directives/preprocessor-endregion) C# directives. The documentation build system injects these regions into the rendered documentation topics.  
 
@@ -228,7 +230,7 @@ The preceding C# code snippet is referenced in the topic's markdown file with th
 
 You may safely ignore (or remove) the `#region` and `#endregion` directives that surround the code. Don't alter the code within these directives if you plan to run the sample scenarios described in the topic. Feel free to alter the code when experimenting with other scenarios.
 
-For more information, see [Contribute to the ASP.NET documentation: Code snippets](https://github.com/dotnet/AspNetCore.Docs/blob/main/CONTRIBUTING.md#code-snippets).
+For more information, see [Contribute to the ASP.NET documentation: Code snippets](https://github.com/dotnet/AspNetCore.Docs/blob/main/CONTRIBUTING.md#code-snippets). -->
 
 ## Breaking changes and security advisories
 

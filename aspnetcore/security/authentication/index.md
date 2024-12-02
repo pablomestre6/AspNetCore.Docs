@@ -48,12 +48,21 @@ The Authentication middleware is added in `Program.cs` by calling <xref:Microsof
 Authentication is responsible for providing the <xref:System.Security.Claims.ClaimsPrincipal> for authorization to make permission decisions against. There are multiple authentication scheme approaches to select which authentication handler is responsible for generating the correct set of claims:
 
 * [Authentication scheme](#authentication-scheme)
-* The default authentication scheme, discussed in the next section.
+* The default authentication scheme, discussed in the next two sections.
 * Directly set <xref:Microsoft.AspNetCore.Http.HttpContext.User?displayProperty=nameWithType>.
 
-There's no automatic probing of schemes. If the default scheme isn't specified, the scheme must be specified in the authorize attribute, otherwise, the following error is thrown:
+When there is only a single authentication scheme registered, it becomes the default scheme. If multiple schemes are registered and the default scheme isn't specified, a scheme must be specified in the authorize attribute, otherwise, the following error is thrown:
 
 > InvalidOperationException: No authenticationScheme was specified, and there was no DefaultAuthenticateScheme found. The default schemes can be set using either AddAuthentication(string defaultScheme) or AddAuthentication(Action\<AuthenticationOptions> configureOptions).
+
+### `DefaultScheme`
+
+When there is only a single authentication scheme registered, the single authentication scheme:
+
+* Is automatically used as the <xref:Microsoft.AspNetCore.Authentication.AuthenticationOptions.DefaultScheme>.
+* Eliminates the need to specify the `DefaultScheme` in <xref:Microsoft.Extensions.DependencyInjection.AuthenticationServiceCollectionExtensions.AddAuthentication(Microsoft.Extensions.DependencyInjection.IServiceCollection)> or <xref:Microsoft.Extensions.DependencyInjection.AuthenticationCoreServiceCollectionExtensions.AddAuthenticationCore(Microsoft.Extensions.DependencyInjection.IServiceCollection)>.
+
+To disable automatically using the single authentication scheme as the `DefaultScheme`, call `AppContext.SetSwitch("Microsoft.AspNetCore.Authentication.SuppressAutoDefaultScheme")`.
 
 ### Authentication scheme
 
@@ -87,7 +96,7 @@ Based on the authentication scheme's configuration and the incoming request cont
 
 ### `RemoteAuthenticationHandler<TOptions>` vs `AuthenticationHandler<TOptions>`
 
-<xref:Microsoft.AspNetCore.Authentication.RemoteAuthenticationHandler%601> is the class for authentication that requires a remote authentication step. When the remote authentication step is finished, the handler calls back to the `CallbackPath` set by the handler. The handler finishes the authentication step using the information passed to the <xref:Microsoft.AspNetCore.Authentication.Twitter.TwitterHandler.HandleRemoteAuthenticateAsync%2A> callback path. [OAuth 2.0](https://oauth.net/2/) and [OIDC](https://openid.net/connect/) both use this pattern. JWT and cookies don't since they can directly use the bearer header and cookie to authenticate. The remotely hosted provider in this case:
+<xref:Microsoft.AspNetCore.Authentication.RemoteAuthenticationHandler%601> is the class for authentication that requires a remote authentication step. When the remote authentication step is finished, the handler calls back to the `CallbackPath` set by the handler. The handler finishes the authentication step using the information passed to the <xref:Microsoft.AspNetCore.Authentication.Twitter.TwitterHandler.HandleRemoteAuthenticateAsync%2A> callback path. [OAuth 2.0](https://oauth.net/2/) and [OIDC](https://openid.net/developers/how-connect-works/) both use this pattern. JWT and cookies don't since they can directly use the bearer header and cookie to authenticate. The remotely hosted provider in this case:
 
 * Is the authentication provider.
 * Examples include [Facebook](xref:security/authentication/facebook-logins), [Twitter](xref:security/authentication/twitter-logins), [Google](xref:security/authentication/google-logins), [Microsoft](xref:security/authentication/microsoft-logins), and any other OIDC provider that handles authenticating users using the handlers mechanism.
@@ -128,7 +137,7 @@ See the following links for differences between challenge and forbid:
 
 ## Authentication providers per tenant
 
-ASP.NET Core doesn't have a built-in solution for multi-tenant authentication. While it's possible for customers to write one using the built-in features, we recommend customers to consider [Orchard Core](https://www.orchardcore.net/) or [ABP Framework](https://abp.io/) for multi-tenant authentication.
+ASP.NET Core doesn't have a built-in solution for multi-tenant authentication. While it's possible for customers to write one using the built-in features, we recommend customers consider [Orchard Core](https://www.orchardcore.net/), [ABP Framework](https://abp.io/), or [Finbuckle.MultiTenant](https://www.finbuckle.com/multitenant)  for multi-tenant authentication.
 
 Orchard Core is:
 
@@ -138,6 +147,15 @@ Orchard Core is:
 See the [Orchard Core](https://github.com/OrchardCMS/OrchardCore) source for an example of authentication providers per tenant.
 
 [ABP Framework](https://abp.io/) supports various architectural patterns including modularity, microservices, domain driven design, and multi-tenancy. See [ABP Framework source on GitHub](https://github.com/abpframework/abp).
+
+Finbuckle.MultiTenant:
+
+* Open source
+* Provides tenant resolution
+* Lightweight
+* Provides data isolation
+* Configure app behavior uniquely for each tenant
+
 
 ## Additional resources
 
@@ -227,7 +245,7 @@ Based on the authentication scheme's configuration and the incoming request cont
 
 ### `RemoteAuthenticationHandler<TOptions>` vs `AuthenticationHandler<TOptions>`
 
-<xref:Microsoft.AspNetCore.Authentication.RemoteAuthenticationHandler%601> is the class for authentication that requires a remote authentication step. When the remote authentication step is finished, the handler calls back to the `CallbackPath` set by the handler. The handler finishes the authentication step using the information passed to the <xref:Microsoft.AspNetCore.Authentication.Twitter.TwitterHandler.HandleRemoteAuthenticateAsync%2A> callback path. [OAuth 2.0](https://oauth.net/2/) and [OIDC](https://openid.net/connect/) both use this pattern. JWT and cookies don't since they can directly use the bearer header and cookie to authenticate. The remotely hosted provider in this case:
+<xref:Microsoft.AspNetCore.Authentication.RemoteAuthenticationHandler%601> is the class for authentication that requires a remote authentication step. When the remote authentication step is finished, the handler calls back to the `CallbackPath` set by the handler. The handler finishes the authentication step using the information passed to the <xref:Microsoft.AspNetCore.Authentication.Twitter.TwitterHandler.HandleRemoteAuthenticateAsync%2A> callback path. [OAuth 2.0](https://oauth.net/2/) and [OIDC](https://openid.net/developers/how-connect-works/) both use this pattern. JWT and cookies don't since they can directly use the bearer header and cookie to authenticate. The remotely hosted provider in this case:
 
 * Is the authentication provider.
 * Examples include [Facebook](xref:security/authentication/facebook-logins), [Twitter](xref:security/authentication/twitter-logins), [Google](xref:security/authentication/google-logins), [Microsoft](xref:security/authentication/microsoft-logins), and any other OIDC provider that handles authenticating users using the handlers mechanism.
@@ -370,7 +388,7 @@ Based on the authentication scheme's configuration and the incoming request cont
 
 ### `RemoteAuthenticationHandler<TOptions>` vs `AuthenticationHandler<TOptions>`
 
-<xref:Microsoft.AspNetCore.Authentication.RemoteAuthenticationHandler%601> is the class for authentication that requires a remote authentication step. When the remote authentication step is finished, the handler calls back to the `CallbackPath` set by the handler. The handler finishes the authentication step using the information passed to the <xref:Microsoft.AspNetCore.Authentication.Twitter.TwitterHandler.HandleRemoteAuthenticateAsync%2A> callback path. [OAuth 2.0](https://oauth.net/2/) and [OIDC](https://openid.net/connect/) both use this pattern. JWT and cookies don't since they can directly use the bearer header and cookie to authenticate. The remotely hosted provider in this case:
+<xref:Microsoft.AspNetCore.Authentication.RemoteAuthenticationHandler%601> is the class for authentication that requires a remote authentication step. When the remote authentication step is finished, the handler calls back to the `CallbackPath` set by the handler. The handler finishes the authentication step using the information passed to the <xref:Microsoft.AspNetCore.Authentication.Twitter.TwitterHandler.HandleRemoteAuthenticateAsync%2A> callback path. [OAuth 2.0](https://oauth.net/2/) and [OIDC](https://openid.net/developers/how-connect-works/) both use this pattern. JWT and cookies don't since they can directly use the bearer header and cookie to authenticate. The remotely hosted provider in this case:
 
 * Is the authentication provider.
 * Examples include [Facebook](xref:security/authentication/facebook-logins), [Twitter](xref:security/authentication/twitter-logins), [Google](xref:security/authentication/google-logins), [Microsoft](xref:security/authentication/microsoft-logins), and any other OIDC provider that handles authenticating users using the handlers mechanism.

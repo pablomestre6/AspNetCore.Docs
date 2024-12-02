@@ -7,7 +7,6 @@ monikerRange: '>= aspnetcore-3.1'
 ms.date: 2/9/2022
 uid: security/authentication/accconfirm
 ---
-
 # Account confirmation and password recovery in ASP.NET Core
 
 By [Rick Anderson](https://twitter.com/RickAndMSFT), [Ponant](https://github.com/Ponant), and [Joe Audette](https://twitter.com/joeaudette)
@@ -17,6 +16,15 @@ This tutorial shows how to build an ASP.NET Core app with email confirmation and
 * [ASP.NET Core](xref:tutorials/razor-pages/razor-pages-start)
 * [Authentication](xref:security/authentication/identity)
 * [Entity Framework Core](xref:data/ef-mvc/intro)
+
+:::moniker range=">= aspnetcore-8.0"
+
+For Blazor guidance, which adds to or supersedes the guidance in this article, see the following resources:
+
+* <xref:blazor/security/account-confirmation-and-password-recovery>
+* <xref:blazor/security/webassembly/standalone-with-identity/account-confirmation-and-password-recovery>
+
+:::moniker-end
 
 <!-- see Dropbox/wrk/Code/SendGridConsole/Program.cs -->
 
@@ -48,11 +56,13 @@ Run the app, select the **Register** link, and register a user. Once registered,
 * Select the `Hello YourEmail@provider.com!` link, which redirects to the `/Identity/Account/Manage/PersonalData` page.
 * Select the **Personal data** tab on the left, and then select **Delete**.
 
-The `Click here to confirm your account` link is displayed because an [IEmailSender](https://github.com/dotnet/aspnetcore/blob/1dcf7acfacf0fe154adcc23270cb0da11ff44ace/src/Identity/UI/src/Areas/Identity/Services/EmailSender.cs) has not been implemented and registered with the [directory injection container](xref:fundamentals/dependency-injection). See the [RegisterConfirmation source](https://github.com/dotnet/aspnetcore/blob/1dcf7acfacf0fe154adcc23270cb0da11ff44ace/src/Identity/UI/src/Areas/Identity/Pages/V4/Account/RegisterConfirmation.cshtml.cs#L74-L77).
+The `Click here to confirm your account` link is displayed because an [IEmailSender](https://github.com/dotnet/aspnetcore/blob/1dcf7acfacf0fe154adcc23270cb0da11ff44ace/src/Identity/UI/src/Areas/Identity/Services/EmailSender.cs) has not been implemented and registered with the [dependency injection container](xref:fundamentals/dependency-injection). See the [`RegisterConfirmation` source](https://github.com/dotnet/aspnetcore/blob/main/src/Identity/UI/src/Areas/Identity/Pages/V4/Account/RegisterConfirmation.cshtml.cs#L71-L74).
+
+[!INCLUDE[](~/includes/aspnetcore-repo-ref-source-links.md)]
 
 ### Configure an email provider
 
-In this tutorial, [SendGrid](https://sendgrid.com) is used to send email. A SendGrid account and key is needed to send email. Other email providers. We recommend using SendGrid or another email service to send email rather than SMTP. SMTP is difficult to secure and set up correctly.
+In this tutorial, [SendGrid](https://sendgrid.com) is used to send email. A SendGrid account and key is needed to send email. We recommend using SendGrid or another email service to send email rather than SMTP. SMTP is difficult to secure and set up correctly.
 
 The SendGrid account may require [adding a Sender](https://sendgrid.com/docs/ui/sending-email/senders/).
 
@@ -96,7 +106,7 @@ From the Package Manager Console, enter the following command:
 Install-Package SendGrid
 ```
 
-# [.NET Core CLI](#tab/netcore-cli)
+# [.NET CLI](#tab/net-cli)
 
 From the console, enter the following command:
 
@@ -242,7 +252,7 @@ Run the app, select the **Register** link, and register a user. Once registered,
 
 ### Configure an email provider
 
-In this tutorial, [SendGrid](https://sendgrid.com) is used to send email. You can use other email providers. We recommend you use SendGrid or another email service to send email. SMTP is difficult to configure so mail is not marked a spam.
+In this tutorial, [SendGrid](https://sendgrid.com) is used to send email. You can use other email providers. We recommend you use SendGrid or another email service to send email. SMTP is difficult to configure so mail is not marked as spam.
 
 The SendGrid account may require [adding a Sender](https://sendgrid.com/docs/ui/sending-email/senders/).
 
@@ -286,7 +296,7 @@ From the Package Manager Console, enter the following command:
 Install-Package SendGrid
 ```
 
-# [.NET Core CLI](#tab/netcore-cli)
+# [.NET CLI](#tab/net-cli)
 
 From the console, enter the following command:
 

@@ -1,6 +1,61 @@
 {
     "redirections": [
         {
+            "source_path": "aspnetcore/web-api/microsoft.dotnet-openapi.md",
+            "redirect_url": "/aspnet/core/fundamentals/openapi/tools",
+            "redirect_document_id": false
+        },
+        {
+            "source_path": "aspnetcore/fundamentals/minimal-apis/aspnetcore-openapi.md",
+            "redirect_url": "/aspnet/core/fundamentals/openapi/aspnetcore-openapi",
+            "redirect_document_id": false
+        },
+        {
+          "source_path": "aspnetcore/fundamentals/openapi/buildtime-openapi.md",
+          "redirect_url": "/aspnet/core/fundamentals/openapi/aspnetcore-openapi#generate-openapi-documents-at- build-time",
+          "redirect_document_id": false
+        },
+        {
+            "source_path": "aspnetcore/security/authentication/samples.md",
+            "redirect_url": "/aspnet/core/security/authorization/introduction",
+            "redirect_document_id": false
+        },
+        {
+            "source_path": "aspnetcore/host-and-deploy/linux-apache.md",
+            "redirect_url": "/aspnet/core/host-and-deploy/linux-nginx",
+            "redirect_document_id": false
+        },
+        {
+            "source_path": "aspnetcore/fundamentals/aot/request-delegate-generator/rgd_ids.md",
+            "redirect_url": "/aspnet/core/fundamentals/aot/request-delegate-generator/rdg_ids",
+            "redirect_document_id": false
+        },
+        {
+            "source_path": "aspnetcore/fundamentals/minimal-apis/openapi.md",
+            "redirect_url": "/aspnet/core/fundamentals/openapi/aspnetcore-openapi",
+            "redirect_document_id": false
+        },
+        {
+            "source_path": "aspnetcore/fundamentals/minimal-apis/handle-errrors.md",
+            "redirect_url": "/aspnet/core/fundamentals/minimal-apis/handle-errors",
+            "redirect_document_id": false
+        },
+        {
+            "source_path": "aspnetcore/web-api/route-to-code.md",
+            "redirect_url": "/aspnet/core/fundamentals/minimal-apis/overview",
+            "redirect_document_id": false
+        },
+        {
+            "source_path": "aspnetcore/fundamentals/logging/loggermessage.md",
+            "redirect_url": "/dotnet/core/extensions/high-performance-logging",
+            "redirect_document_id": false
+        },
+        {
+            "source_path": "aspnetcore/client-side/spa/react-with-redux.md",
+            "redirect_url": "/aspnet/core/client-side/spa/intro",
+            "redirect_document_id": false
+        },
+        {
             "source_path": "aspnet/core/host-and-deploy/azure-apps/azure-continuous-deployment.md",
             "redirect_url": "/azure/app-service/deploy-continuous-deployment",
             "redirect_document_id": false
@@ -292,8 +347,13 @@
         },
         {
             "source_path": "aspnetcore/performance/measuring.md",
-            "redirect_url": "/aspnet/core/performance/",
+            "redirect_url": "/aspnet/core/performance/overview",
             "redirect_document_id": false
+        },
+        {
+            "source_path": "aspnetcore/performance/performance-best-practices.md",
+            "redirect_url": "/aspnet/core/fundamentals/best-practices",
+            "redirect_document_id": true
         },
         {
             "source_path": "aspnetcore/security/authentication/oauth2.md",
@@ -822,7 +882,7 @@
         },
         {
             "source_path": "aspnetcore/razor-components/forms-validation.md",
-            "redirect_url": "/aspnet/core/blazor/forms-and-input-components",
+            "redirect_url": "/aspnet/core/blazor/forms/",
             "redirect_document_id": false
         },
         {
@@ -942,7 +1002,7 @@
         },
         {
             "source_path": "aspnetcore/security/blazor/server/threat-mitigation.md",
-            "redirect_url": "/aspnet/core/blazor/security/server/threat-mitigation",
+            "redirect_url": "/aspnet/core/blazor/security/server/interactive-server-side-rendering",
             "redirect_document_id": false
         },
         {
@@ -1057,7 +1117,7 @@
         },
         {
             "source_path": "aspnetcore/blazor/integrate-components.md",
-            "redirect_url": "/aspnet/core/blazor/components/prerendering-and-integration",
+            "redirect_url": "/aspnet/core/blazor/components/integration",
             "redirect_document_id": false
         },
         {
@@ -1097,7 +1157,7 @@
         },
         {
             "source_path": "aspnetcore/blazor/components/integrate-components-into-razor-pages-and-mvc-apps.md",
-            "redirect_url": "/aspnet/core/blazor/components/prerendering-and-integration",
+            "redirect_url": "/aspnet/core/blazor/components/integration",
             "redirect_document_id": false
         },
         {
@@ -1176,12 +1236,126 @@
         },
         {
             "source_path": "aspnetcore/blazor/forms-validation.md",
-            "redirect_url": "/aspnet/core/blazor/forms-and-input-components",
+            "redirect_url": "/aspnet/core/blazor/forms/",
             "redirect_document_id": false
         },
         {
             "source_path": "aspnetcore/grpc/httpapi.md",
             "redirect_url": "/aspnet/core/grpc/json-transcoding",
+            "redirect_document_id": false
+        },
+        {
+            "source_path": "aspnetcore/whats-new/dotnet-AspNetCore.Docs-2022-03-01.md",
+            "redirect_url": "/aspnet/whats-new/dotnet-AspNetCore.Docs-mod5"
+        },
+        {
+            "source_path": "aspnetcore/whats-new/dotnet-AspNetCore.Docs-2022-04-01.md",
+            "redirect_url": "/aspnet/whats-new/dotnet-AspNetCore.Docs-mod0"
+        },
+        {
+            "source_path": "aspnetcore/whats-new/dotnet-AspNetCore.Docs-2022-07-01.md",
+            "redirect_url": "/aspnet/whats-new/dotnet-AspNetCore.Docs-mod1"
+        },
+        {
+            "source_path": "aspnetcore/whats-new/dotnet-AspNetCore.Docs-2022-08-01.md",
+            "redirect_url": "/aspnet/whats-new/dotnet-AspNetCore.Docs-mod2"
+        },
+        {
+            "source_path": "aspnetcore/whats-new/dotnet-AspNetCore.Docs-2022-09-01.md",
+            "redirect_url": "/aspnet/whats-new/dotnet-AspNetCore.Docs-mod3"
+        },
+        {
+            "source_path": "aspnetcore/whats-new/dotnet-AspNetCore.Docs-2022-10-01.md",
+            "redirect_url": "/aspnet/whats-new/dotnet-AspNetCore.Docs-mod4"
+        },
+        {
+            "source_path": "aspnetcore/blazor/security/webassembly/hosted-with-azure-active-directory.md",
+            "redirect_url": "/aspnet/core/blazor/security/webassembly/hosted-with-microsoft-entra-id",
+            "redirect_document_id": false
+        },
+        {
+            "source_path": "aspnetcore/blazor/security/webassembly/azure-active-directory-groups-and-roles.md",
+            "redirect_url": "/aspnet/core/blazor/security/webassembly/microsoft-entra-id-groups-and-roles",
+            "redirect_document_id": false
+        },
+        {
+            "source_path": "aspnetcore/blazor/security/webassembly/standalone-with-azure-active-directory.md",
+            "redirect_url": "/aspnet/core/blazor/security/webassembly/standalone-with-microsoft-entra-id",
+            "redirect_document_id": false
+        },
+        {
+            "source_path": "aspnetcore/blazor/tutorials/signalr-blazor-preview.md",
+            "redirect_url": "/aspnet/core/blazor/tutorials/signalr-blazor",
+            "redirect_document_id": false
+        },
+        {
+            "source_path": "aspnetcore/blazor/blazor-server-ef-core.md",
+            "redirect_url": "/aspnet/core/blazor/blazor-ef-core",
+            "redirect_document_id": false
+        },
+        {
+            "source_path": "aspnetcore/blazor/forms-and-input-components.md",
+            "redirect_url": "/aspnet/core/blazor/forms/",
+            "redirect_document_id": false
+        },
+        {
+            "source_path": "aspnetcore/blazor/security/server/threat-mitigation.md",
+            "redirect_url": "/aspnet/core/blazor/security/server/interactive-server-side-rendering",
+            "redirect_document_id": false
+        },
+        {
+            "source_path": "aspnetcore/blazor/security/server/blazor-web-app-with-oidc.md",
+            "redirect_url": "/aspnet/core/blazor/security/blazor-web-app-with-oidc",
+            "redirect_document_id": false
+        },
+        {
+            "source_path": "aspnetcore/blazor/http-caching-issues.md",
+            "redirect_url": "/aspnet/core/blazor/host-and-deploy/webassembly-caching/http-caching-issues",
+            "redirect_document_id": false
+        },
+        {
+            "source_path": "aspnetcore/blazor/images.md",
+            "redirect_url": "/aspnet/core/blazor/images-and-documents",
+            "redirect_document_id": false
+        },
+        {
+            "source_path": "aspnetcore/blazor/components/prerendering-and-integration.md",
+            "redirect_url": "/aspnet/core/blazor/components/integration",
+            "redirect_document_id": false
+        },
+        {
+            "source_path": "aspnetcore/blazor/security/webassembly/standalone-with-identity.md",
+            "redirect_url": "/aspnet/core/blazor/security/webassembly/standalone-with-identity/",
+            "redirect_document_id": false
+        },
+        {
+            "source_path": "aspnetcore/blazor/security/server/account-confirmation-and-password-recovery.md",
+            "redirect_url": "/aspnet/core/blazor/security/account-confirmation-and-password-recovery",
+            "redirect_document_id": false
+        },
+        {
+            "source_path": "aspnetcore/blazor/security/server/interactive-server-side-rendering.md",
+            "redirect_url": "/aspnet/core/blazor/security/interactive-server-side-rendering",
+            "redirect_document_id": false
+        },
+        {
+            "source_path": "aspnetcore/blazor/security/server/qrcodes-for-authenticator-apps.md",
+            "redirect_url": "/aspnet/core/blazor/security/qrcodes-for-authenticator-apps",
+            "redirect_document_id": false
+        },
+        {
+            "source_path": "aspnetcore/blazor/security/server/static-server-side-rendering.md",
+            "redirect_url": "/aspnet/core/blazor/security/static-server-side-rendering",
+            "redirect_document_id": false
+        },
+        {
+            "source_path": "aspnetcore/blazor/security/server/additional-scenarios.md",
+            "redirect_url": "/aspnet/core/blazor/security/additional-scenarios",
+            "redirect_document_id": false
+        },
+        {
+            "source_path": "aspnetcore/blazor/security/server/index.md",
+            "redirect_url": "/aspnet/core/blazor/security/",
             "redirect_document_id": false
         }
     ]

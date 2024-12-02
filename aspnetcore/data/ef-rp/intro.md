@@ -1,8 +1,8 @@
 ---
 title: Razor Pages with Entity Framework Core in ASP.NET Core - Tutorial 1 of 8
-author: rick-anderson
+author: tdykstra
 description: Shows how to create a Razor Pages app using Entity Framework Core
-ms.author: riande
+ms.author: tdykstra
 monikerRange: '>= aspnetcore-3.1'
 ms.custom: "mvc"
 ms.date: 11/11/2021
@@ -10,6 +10,8 @@ uid: data/ef-rp/intro
 ---
 
 # Razor Pages with Entity Framework Core in ASP.NET Core - Tutorial 1 of 8
+
+[!INCLUDE[](~/includes/not-latest-version.md)]
 
 By [Tom Dykstra](https://github.com/tdykstra), [Jeremy Likness](https://twitter.com/jeremylikness), and [Jon P Smith](https://twitter.com/thereformedprog)
 
@@ -91,6 +93,8 @@ Select `ContosoUniversity.csproj` to open the project.
   dotnet ef database update
     
   ```
+
+[!INCLUDE[](~/includes/dotnet-tool-install-arch-options.md)]
 
 <!-- prerelease versions require
   dotnet tool uninstall --global dotnet-ef
@@ -248,7 +252,7 @@ The following packages are automatically installed:
 
 # [Visual Studio Code](#tab/visual-studio-code)
 
-* Run the following .NET Core CLI commands to install required NuGet packages:
+* Run the following .NET CLI commands to install required NuGet packages:
 
   ```dotnetcli
   dotnet add package Microsoft.EntityFrameworkCore.SQLite
@@ -347,7 +351,7 @@ The highlighted code:
   * An entity set typically corresponds to a database table.
   * An entity corresponds to a row in the table.
 * Calls <xref:Microsoft.EntityFrameworkCore.DbContext.OnModelCreating%2A>. `OnModelCreating`:
-  * Is called when `SchoolContext` has been initialized, but before the model has been locked down and used to initialize the context.
+  * Is called when `SchoolContext` has been initialized but before the model has been secured and used to initialize the context.
   * Is required because later in the tutorial the `Student` entity will have references to the other entities.
   <!-- Review, OnModelCreating needs review -->
 
@@ -448,7 +452,7 @@ The code checks if there are any students in the database. If there are no stude
 
 * In `Program.cs`, remove `//` from the `DbInitializer.Initialize` line:
 
- [!code-csharp[Main](intro/samples/cu60/Program.cs?name=snippet_ensure&highlight=6)]
+ [!code-csharp[Main](intro/samples/cu60/Program.cs?name=snippet_ensure&highlight=7)]
 
 # [Visual Studio](#tab/visual-studio)
 
@@ -517,6 +521,9 @@ Some things to be aware of when writing asynchronous code that uses EF Core:
 * To take advantage of the performance benefits of async code, verify that library packages (such as for paging) use async if they call EF Core methods that send queries to the database.
 
 For more information about asynchronous programming in .NET, see [Async Overview](/dotnet/standard/async) and [Asynchronous programming with async and await](/dotnet/csharp/programming-guide/concepts/async/).
+
+> [!WARNING]
+> The async implementation of [Microsoft.Data.SqlClient](https://github.com/dotnet/SqlClient) has some known issues ([#593](https://github.com/dotnet/SqlClient/issues/593), [#601](https://github.com/dotnet/SqlClient/issues/601), and others). If you're seeing unexpected performance problems, try using sync command execution instead, especially when dealing with large text or binary values.
 
 <!-- Review: See https://github.com/dotnet/AspNetCore.Docs/issues/14528 -->
 ## Performance considerations
@@ -761,7 +768,7 @@ The following packages are automatically installed:
 
 # [Visual Studio Code](#tab/visual-studio-code)
 
-* Run the following .NET Core CLI commands to install required NuGet packages:
+* Run the following .NET CLI commands to install required NuGet packages:
 
   ```dotnetcli
   dotnet add package Microsoft.EntityFrameworkCore.SQLite -v 5.0.0-*
@@ -858,7 +865,7 @@ The highlighted code:
   * An entity set typically corresponds to a database table.
   * An entity corresponds to a row in the table.
 * Calls <xref:Microsoft.EntityFrameworkCore.DbContext.OnModelCreating%2A>. `OnModelCreating`:
-  * Is called when `SchoolContext` has been initialized, but before the model has been locked down and used to initialize the context.
+  * Is called when `SchoolContext` has been initialized but before the model has been secured and used to initialize the context.
   * Is required because later in the tutorial the `Student` entity will have references to the other entities.
   <!-- Review, OnModelCreating needs review -->
 
@@ -1263,7 +1270,7 @@ The following packages are automatically installed:
 
 # [Visual Studio Code](#tab/visual-studio-code)
 
-* Run the following .NET Core CLI commands to install required NuGet packages:
+* Run the following .NET CLI commands to install required NuGet packages:
 <!-- TO DO  After testing, Replace with
 [!INCLUDE[](~/includes/includes/add-EF-NuGet-SQLite-CLI.md)]
 remove dotnet tool install --global  below

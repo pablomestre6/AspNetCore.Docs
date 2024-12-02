@@ -2,7 +2,7 @@
 title: Migrate from ASP.NET Web API to ASP.NET Core
 author: ardalis
 description: Learn how to migrate a web API implementation from ASP.NET 4.x Web API to ASP.NET Core MVC.
-ms.author: scaddie
+ms.author: wpickett
 ms.custom: mvc
 ms.date: 01/31/2022
 uid: migration/webapi
@@ -298,7 +298,7 @@ Configure routing as follows:
     Attribute routing supports tokens, such as `[controller]` and `[action]`. At runtime, each token is replaced with the name of the controller or action, respectively, to which the attribute has been applied. The tokens:
     * Reduce the number of magic strings in the project.
     * Ensure routes remain synchronized with the corresponding controllers and actions when automatic rename refactorings are applied.
-1. Enable HTTP Get requests to the `ProductController` actions:
+1. Enable HTTP Get requests to the `ProductsController` actions:
     * Apply the [`[HttpGet]`](xref:Microsoft.AspNetCore.Mvc.HttpGetAttribute) attribute to the `GetAllProducts` action.
     * Apply the `[HttpGet("{id}")]` attribute to the `GetProduct` action.
 

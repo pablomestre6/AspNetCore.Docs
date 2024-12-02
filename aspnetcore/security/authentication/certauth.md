@@ -4,7 +4,7 @@ author: blowdart
 description: Learn how to configure certificate authentication in ASP.NET Core for IIS and HTTP.sys.
 monikerRange: '>= aspnetcore-3.1'
 ms.author: bdorrans
-ms.date: 01/10/2022
+ms.date: 11/03/2023
 uid: security/authentication/certauth
 ---
 # Configure certificate authentication in ASP.NET Core
@@ -51,6 +51,22 @@ The `CertificateAuthenticationOptions` handler has some built-in validations tha
 Default value: `CertificateTypes.Chained`
 
 This check validates that only the appropriate certificate type is allowed. If the app is using self-signed certificates, this option needs to be set to `CertificateTypes.All` or `CertificateTypes.SelfSigned`.
+
+### ChainTrustValidationMode
+
+Default value: [X509ChainTrustMode.System](xref:System.Security.Cryptography.X509Certificates.X509ChainTrustMode.System)
+
+The certificate presented by the client must chain to a trusted root certificate. This check controls which trust store contains these root certificates.
+
+By default, the handler uses the system trust store. If the presented client certificate needs to chain to a root certificate which doesn't appear in the system trust store, this option can be set to [X509ChainTrustMode.CustomRootTrust](xref:System.Security.Cryptography.X509Certificates.X509ChainTrustMode.CustomRootTrust) to make the handler use the `CustomTrustStore`.
+
+### CustomTrustStore
+
+Default value: Empty <xref:System.Security.Cryptography.X509Certificates.X509Certificate2Collection>
+
+If the handler's <xref:Microsoft.AspNetCore.Authentication.Certificate.CertificateAuthenticationOptions.ChainTrustValidationMode> property is set to `X509ChainTrustMode.CustomRootTrust`, this <xref:System.Security.Cryptography.X509Certificates.X509Certificate2Collection> contains every certificate which will be used to validate the client certificate up to a trusted root, including the trusted root.
+
+When the client presents a certificate which is part of a multi-level certificate chain, `CustomTrustStore` must contain every issuing certificate in the chain.
 
 ### ValidateCertificateUse
 
@@ -195,7 +211,7 @@ Export-Certificate -Cert cert:\localMachine\my\"The thumbprint..." -FilePath roo
 
 #### Install in the trusted root
 
-The root certificate needs to be trusted on your host system. A root certificate which was not created by a certificate authority won't be trusted by default. For information on how to trust the root certificate on Windows, see [this question](https://social.msdn.microsoft.com/Forums/SqlServer/5ed119ef-1704-4be4-8a4f-ef11de7c8f34/a-certificate-chain-processed-but-terminated-in-a-root-certificate-which-is-not-trusted-by-the).
+The root certificate must be trusted on your host system. Only root certificates created by a certificate authority are trusted by default. For information on how to trust the root certificate on Windows, see [the Windows documentation](/windows-hardware/drivers/install/trusted-root-certification-authorities-certificate-store) or the [`Import-Certificate`](/powershell/module/pki/import-certificate) PowerShell cmdlet.
 
 #### Intermediate certificate
 
@@ -341,7 +357,7 @@ The implementation and configuration of this feature varies by server and framew
 
 IIS manages the client certificate negotiation on your behalf. A subsection of the application can enable the `SslRequireCert` option to negotiate the client certificate for those requests. See [Configuration in the IIS documentation](/iis/configuration/system.webserver/security/access#configuration) for details.
 
-IIS will automatically buffer any request body data up to a configured size limit before renegotiating. Requests that exceed the limit are rejected with a 413 response. This limit defaults to 48MB and is configurable by setting the [uploadReadAheadSize](/iis/configuration/system.webserver/serverruntime).
+IIS will automatically buffer any request body data up to a configured size limit before renegotiating. Requests that exceed the limit are rejected with a 413 response. This limit defaults to 48KB and is configurable by setting the [uploadReadAheadSize](/iis/configuration/system.webserver/serverruntime).
 
 #### HttpSys
 
@@ -357,13 +373,13 @@ An application can first check the <xref:Microsoft.AspNetCore.Http.ConnectionInf
 
 #### Kestrel
 
-Kestrel controls client certificate negotation with the <xref:Microsoft.AspNetCore.Server.Kestrel.Https.HttpsConnectionAdapterOptions.ClientCertificateMode> option.
+Kestrel controls client certificate negotiation with the <xref:Microsoft.AspNetCore.Server.Kestrel.Https.HttpsConnectionAdapterOptions.ClientCertificateMode> option.
 
 <xref:Microsoft.AspNetCore.Server.Kestrel.Https.ClientCertificateMode.DelayCertificate?displayProperty=nameWithType> is new option available in .NET 6 or later. When set, an app can check the <xref:Microsoft.AspNetCore.Http.ConnectionInfo.ClientCertificate> property to see if the certificate is available. If it isn't available, ensure the request body has been consumed before calling <xref:Microsoft.AspNetCore.Http.ConnectionInfo.GetClientCertificateAsync%2A> to negotiate one. Note `GetClientCertificateAsync` can return a null certificate if the client declines to provide one.
 
 *NOTE* The application should buffer or consume any request body data before attempting the renegotiation, otherwise `GetClientCertificateAsync` may throw `InvalidOperationException: Client stream needs to be drained before renegotiation.`.
 
-If you're programmatically configuring the TLS settings per host there is a new [UseHttps](xref:fundamentals/servers/kestrel/endpoints#listenoptionsusehttps) overload available in .NET 6 and later that takes <xref:Microsoft.AspNetCore.Server.Kestrel.Https.TlsHandshakeCallbackOptions> and controls client certificate renegotiation via <xref:Microsoft.AspNetCore.Server.Kestrel.Https.TlsHandshakeCallbackContext.AllowDelayedClientCertificateNegotation%2A?displayProperty=nameWithType>.
+If you're programmatically configuring the TLS settings per SNI host name, call the [`UseHttps`](xref:fundamentals/servers/kestrel/endpoints#listenoptionsusehttps) overload (.NET 6 or later) that takes <xref:Microsoft.AspNetCore.Server.Kestrel.Https.TlsHandshakeCallbackOptions> and controls client certificate renegotiation via <xref:Microsoft.AspNetCore.Server.Kestrel.Https.TlsHandshakeCallbackContext.AllowDelayedClientCertificateNegotation%2A?displayProperty=nameWithType>.
 
     
 :::moniker-end
@@ -1009,7 +1025,7 @@ The implementation and configuration of this feature varies by server and framew
 
 IIS manages the client certificate negotiation on your behalf. A subsection of the application can enable the `SslRequireCert` option to negotiate the client certificate for those requests. See [Configuration in the IIS documentation](/iis/configuration/system.webserver/security/access#configuration) for details.
 
-IIS will automatically buffer any request body data up to a configured size limit before renegotiating. Requests that exceed the limit are rejected with a 413 response. This limit defaults to 48MB and is configurable by setting the [uploadReadAheadSize](/iis/configuration/system.webserver/serverruntime).
+IIS will automatically buffer any request body data up to a configured size limit before renegotiating. Requests that exceed the limit are rejected with a 413 response. This limit defaults to 48KB and is configurable by setting the [uploadReadAheadSize](/iis/configuration/system.webserver/serverruntime).
 
 #### HttpSys
 
@@ -1023,7 +1039,7 @@ There is a [known issue](https://github.com/dotnet/aspnetcore/issues/33586) wher
 
 #### Kestrel
 
-Kestrel controls client certificate negotation with the <xref:Microsoft.AspNetCore.Server.Kestrel.Https.HttpsConnectionAdapterOptions.ClientCertificateMode> option.
+Kestrel controls client certificate negotiation with the <xref:Microsoft.AspNetCore.Server.Kestrel.Https.HttpsConnectionAdapterOptions.ClientCertificateMode> option.
 
 For .NET 5 and earlier Kestrel does not support renegotiating after the start of a connection to acquire a client certificate. This feature has been added in .NET 6.
 
@@ -1667,7 +1683,7 @@ The implementation and configuration of this feature varies by server and framew
 
 IIS manages the client certificate negotiation on your behalf. A subsection of the application can enable the `SslRequireCert` option to negotiate the client certificate for those requests. See [Configuration in the IIS documentation](/iis/configuration/system.webserver/security/access#configuration) for details.
 
-IIS will automatically buffer any request body data up to a configured size limit before renegotiating. Requests that exceed the limit are rejected with a 413 response. This limit defaults to 48MB and is configurable by setting the [uploadReadAheadSize](/iis/configuration/system.webserver/serverruntime).
+IIS will automatically buffer any request body data up to a configured size limit before renegotiating. Requests that exceed the limit are rejected with a 413 response. This limit defaults to 48KB and is configurable by setting the [uploadReadAheadSize](/iis/configuration/system.webserver/serverruntime).
 
 #### HttpSys
 
@@ -1681,7 +1697,7 @@ There is a [known issue](https://github.com/dotnet/aspnetcore/issues/33586) wher
 
 #### Kestrel
 
-Kestrel controls client certificate negotation with the <xref:Microsoft.AspNetCore.Server.Kestrel.Https.HttpsConnectionAdapterOptions.ClientCertificateMode> option.
+Kestrel controls client certificate negotiation with the <xref:Microsoft.AspNetCore.Server.Kestrel.Https.HttpsConnectionAdapterOptions.ClientCertificateMode> option.
 
 For .NET 5 and earlier Kestrel does not support renegotiating after the start of a connection to acquire a client certificate. This feature has been added in .NET 6.
 

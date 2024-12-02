@@ -3,14 +3,18 @@ title: Deploy ASP.NET Core apps to Azure App Service
 author: bradygaster
 description: This article contains links to Azure host and deploy resources.
 monikerRange: '>= aspnetcore-2.1'
-ms.author: bradyg
+ms.author: wpickett
 ms.custom: mvc
 ms.date: 11/6/2020
 uid: host-and-deploy/azure-apps/index
 ---
 # Deploy ASP.NET Core apps to Azure App Service
 
+[!INCLUDE[](~/includes/not-latest-version.md)]
+
 [Azure App Service](https://azure.microsoft.com/services/app-service/) is a [Microsoft cloud computing platform service](https://azure.microsoft.com/) for hosting web apps, including ASP.NET Core.
+
+[!INCLUDE[](~/includes/reliableWAP_H2.md)]
 
 ## Useful resources
 
@@ -48,7 +52,7 @@ The platform architecture (x86/x64) of an App Services app is set in the app's s
 
 :::moniker range=">= aspnetcore-2.2"
 
-Runtimes for 64-bit (x64) and 32-bit (x86) apps are present on Azure App Service. The [.NET Core SDK](/dotnet/core/sdk) available on App Service is 32-bit, but you can deploy 64-bit apps built locally using the [Kudu](https://github.com/projectkudu/kudu/wiki) console or the publish process in Visual Studio. For more information, see the [Publish and deploy the app](#publish-and-deploy-the-app) section.
+ASP.NET Core apps can be published [framework-dependent](/dotnet/core/deploying/) because the runtimes for 64-bit (x64) and 32-bit (x86) apps are present on Azure App Service. The [.NET Core SDK](/dotnet/core/sdk) available on App Service is 32-bit, but you can deploy 64-bit apps built locally using the [Kudu](https://github.com/projectkudu/kudu/wiki) console or the publish process in Visual Studio. For more information, see the [Publish and deploy the app](#publish-and-deploy-the-app) section.
 
 :::moniker-end
 
@@ -78,7 +82,7 @@ App settings in the Azure Portal permit you to set environment variables for the
 
 When an app setting is created or modified in the Azure Portal and the **Save** button is selected, the Azure App is restarted. The environment variable is available to the app after the service restarts.
 
-When an app uses the [Generic Host](xref:fundamentals/host/generic-host), environment variables are loaded into the app's configuration when <xref:Microsoft.Extensions.Hosting.Host.CreateDefaultBuilder%2A> is called to build the host. For more information, see <xref:fundamentals/host/generic-host> and the [Environment Variables Configuration Provider](xref:fundamentals/configuration/index#environment-variables).
+Environment variables are loaded into the app's configuration when [CreateBuilder](/dotnet/api/microsoft.aspnetcore.builder.webapplication.createbuilder) is called to build the host. For more information, see the [Environment Variables Configuration Provider](xref:fundamentals/configuration/index#environment-variables).
 
 :::moniker-end
 :::moniker range="< aspnetcore-3.0"
@@ -184,7 +188,17 @@ Follow the guidance in the [Deploy the app self-contained](#deploy-the-app-self-
 
 ### Use Docker with Web Apps for containers
 
-The [Docker Hub](https://hub.docker.com/r/microsoft/aspnetcore/) contains the latest preview Docker images. The images can be used as a base image. Use the image and deploy to Web Apps for Containers normally.
+<!--
+     Doc author note on the Docker Hub cross-link (@guardrex 1/11/24)
+
+     The landing page at https://hub.docker.com/_/microsoft-dotnet
+     is throwing 401/404/405 errors on load, which is triggering a 
+     broken link warning on our doc builds. I've code fenced the link.
+     I asked them about the errors, and they say that they can't
+     fix them. https://github.com/dotnet/dotnet-docker/issues/5064
+-->
+
+The Docker Hub at `https://hub.docker.com/_/microsoft-dotnet` contains the latest preview Docker images. The images can be used as a base image. Use the image and deploy to Web Apps for Containers normally.
 
 ### Install the preview site extension
 
@@ -225,9 +239,6 @@ When the operation completes, the latest .NET Core preview is installed. Verify 
 >
 > The command returns `True` when the x64 preview runtime is installed.
 
-> [!NOTE]
-> **ASP.NET Core Extensions** enables additional functionality for ASP.NET Core on Azure App Services, such as enabling Azure logging. The extension is installed automatically when deploying from Visual Studio. If the extension isn't installed, install it for the app.
-
 **Use the preview site extension with an ARM template**
 
 If an ARM template is used to create and deploy apps, the `Microsoft.Web/sites/siteextensions` resource type can be used to add the site extension to a web app. In the following example, the ASP.NET Core 5.0 (x64) Runtime site extension (`AspNetCoreRuntime.5.0.x64`) is added to the app:
@@ -249,6 +260,8 @@ For a 64-bit deployment:
 
 ### Deploy the app framework-dependent
 
+Apps published as framework-dependent are cross-platform and don't include the .NET runtime in the deployment. Azure App Service includes the .NET runtime.
+
 # [Visual Studio](#tab/visual-studio)
 
 1. Right-click the project in **Solution Explorer** and select **Publish**. Alternatively, select **Build** > **Publish {Application Name}** from the Visual Studio toolbar.
@@ -266,7 +279,7 @@ For a 64-bit deployment:
    * Select **Save**.
    * Select **Publish**.
 
-# [.NET Core CLI](#tab/netcore-cli/)
+# [.NET CLI](#tab/net-cli/)
 
 1. In the project file, don't specify a [Runtime Identifier (RID)](/dotnet/core/rid-catalog).
 
@@ -282,7 +295,8 @@ For a 64-bit deployment:
 
 ### Deploy the app self-contained
 
-Use Visual Studio or the .NET Core CLI for a [self-contained deployment (SCD)](/dotnet/core/deploying/#self-contained-deployments-scd).
+Publishing an app as self-contained produces a platform-specific executable. The output publishing folder contains all components of the app, including the .NET libraries and target runtime. For more information, see [Publish self-contained]/dotnet/core/deploying/#publish-self-contained).
+Use Visual Studio or the .NET CLI for a [self-contained deployment (SCD)](/dotnet/core/deploying/#self-contained-deployments-scd).
 
 # [Visual Studio](#tab/visual-studio)
 
@@ -301,7 +315,7 @@ Use Visual Studio or the .NET Core CLI for a [self-contained deployment (SCD)](/
    * Select **Save**.
    * Select **Publish**.
 
-# [.NET Core CLI](#tab/netcore-cli/)
+# [.NET CLI](#tab/net-cli/)
 
 1. In the project file, specify one or more [Runtime Identifiers (RIDs)](/dotnet/core/rid-catalog). Use `<RuntimeIdentifier>` for a single RID, or use `<RuntimeIdentifiers>` to provide a semicolon-delimited list of multiple RIDs. In the following example, the `win-x86` RID is specified:
 
@@ -335,8 +349,10 @@ If you need to transform *web.config* on publish (for example, set environment v
 * [App Service overview](/azure/app-service/app-service-web-overview)
 * [Azure App Service diagnostics overview](/azure/app-service/app-service-diagnostics)
 * <xref:host-and-deploy/web-farm>
+* [Tutorial: Connect to SQL Database from .NET App Service without secrets using a managed identity](/azure/app-service/tutorial-connect-msi-sql-database?tabs=efcore%2Cdotnetcore)
 
-Azure App Service on Windows Server uses [Internet Information Services (IIS)](https://www.iis.net/). The following topics pertain to the underlying IIS technology:
+Azure App Service on Windows Server uses [Internet Information Services (IIS)](https://www.iis.net/). [Kestrel and YARP](https://devblogs.microsoft.com/dotnet/bringing-kestrel-and-yarp-to-azure-app-services/) on the front end provides the load balancer. The following topics pertain to the underlying IIS technology:
+<!-- Kestrel can't replace IIS because it's needed for ASP.NET Framework ,FX 3.5 and 4.8 -->
 
 * <xref:host-and-deploy/iis/index>
 * <xref:host-and-deploy/aspnet-core-module>

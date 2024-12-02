@@ -1,8 +1,8 @@
 ---
 title: Razor syntax reference for ASP.NET Core
-author: rick-anderson
+author: tdykstra
 description: Learn about Razor markup syntax for embedding server-based code into webpages.
-ms.author: riande
+ms.author: tdykstra
 ms.date: 02/12/2020
 uid: mvc/views/razor
 ---
@@ -254,7 +254,40 @@ To render the rest of an entire line as HTML inside a code block, use `@:` synta
 
 Without the `@:` in the code, a Razor runtime error is generated.
 
-Extra `@` characters in a Razor file can cause compiler errors at statements later in the block. These compiler errors can be difficult to understand because the actual error occurs before the reported error. This error is common after combining multiple implicit/explicit expressions into a single code block.
+Extra `@` characters in a Razor file can cause compiler errors at statements later in the block. These extra `@` compiler errors:
+
+* Can be difficult to understand because the actual error occurs before the reported error.
+* Is common after combining multiple implicit and explicit expressions into a single code block.
+
+### Conditional attribute rendering
+
+Razor automatically omits attributes that aren't needed. If the value passed in is `null` or `false`, the attribute isn't rendered.
+
+For example,  consider the following razor:
+
+```cshtml
+<div class="@false">False</div>
+<div class="@null">Null</div>
+<div class="@("")">Empty</div>
+<div class="@("false")">False String</div>
+<div class="@("active")">String</div>
+<input type="checkbox" checked="@true" name="true" />
+<input type="checkbox" checked="@false" name="false" />
+<input type="checkbox" checked="@null" name="null" />
+```
+
+The preceding Razor markup generates the following HTML:
+
+```html
+<div>False</div>
+<div>Null</div>
+<div class="">Empty</div>
+<div class="false">False String</div>
+<div class="active">String</div>
+<input type="checkbox" checked="checked" name="true">
+<input type="checkbox" name="false">
+<input type="checkbox" name="null">
+```
 
 ## Control structures
 
@@ -379,7 +412,7 @@ In C#, a `using` statement is used to ensure an object is disposed. In Razor, th
 @using (Html.BeginForm())
 {
     <div>
-        Email: <input type="email" id="Email" value="">
+        <label>Email: <input type="email" id="Email" value=""></label>
         <button>Register</button>
     </div>
 }
@@ -434,7 +467,7 @@ Razor comments are removed by the server before the webpage is rendered. Razor u
 
 ## Directives
 
-Razor directives are represented by implicit expressions with reserved keywords following the `@` symbol. A directive typically changes the way a view is parsed or enables different functionality.
+Razor directives are represented by implicit expressions with reserved keywords following the `@` symbol. A directive typically changes the way a view is compiled or functions.
 
 Understanding how Razor generates code for a view makes it easier to understand how directives work.
 
@@ -695,11 +728,77 @@ When set to `false` (default), whitespace in the rendered markup from Razor comp
 
 :::moniker-end
 
+:::moniker range=">= aspnetcore-8.0"
+
+### `@rendermode`
+
+*This scenario only applies to Razor components (`.razor`).*
+
+Sets the render mode of a Razor component:
+
+* `InteractiveServer`: Applies interactive server rendering using Blazor Server.
+* `InteractiveWebAssembly`: Applies interactive WebAssembly rendering using Blazor WebAssembly.
+* `InteractiveAuto`: Initially applies interactive WebAssembly rendering using Blazor Server, and then applies interactive WebAssembly rendering using WebAssembly on subsequent visits after the Blazor bundle is downloaded.
+
+For a component instance:
+
+```razor
+<... @rendermode="InteractiveServer" />
+```
+
+In the component definition:
+
+```razor
+@rendermode InteractiveServer
+```
+
+> [!NOTE]
+> Blazor templates include a static `using` directive for <xref:Microsoft.AspNetCore.Components.Web.RenderMode> in the app's `_Imports` file (`Components/_Imports.razor`) for shorter `@rendermode` syntax:
+>
+> ```razor
+> @using static Microsoft.AspNetCore.Components.Web.RenderMode
+> ```
+>
+> Without the preceding directive, components must specify the static <xref:Microsoft.AspNetCore.Components.Web.RenderMode> class in `@rendermode` syntax explicitly:
+>
+> ```razor
+> <Dialog @rendermode="RenderMode.InteractiveServer" />
+> ```
+
+For more information, including guidance on disabling prerendering with the directive/directive attribute, see <xref:blazor/components/render-modes>.
+
+:::moniker-end
+
 ### `@section`
 
 *This scenario only applies to MVC views and Razor Pages (`.cshtml`).*
 
 The `@section` directive is used in conjunction with [MVC and Razor Pages layouts](xref:mvc/views/layout) to enable views or pages to render content in different parts of the HTML page. For more information, see <xref:mvc/views/layout>.
+
+### `@typeparam`
+
+*This scenario only applies to Razor components (`.razor`).*
+
+The `@typeparam` directive declares a [generic type parameter](/dotnet/csharp/programming-guide/generics/generic-type-parameters) for the generated component class:
+
+```razor
+@typeparam TEntity
+```
+
+:::moniker range=">= aspnetcore-6.0"
+
+Generic types with [`where`](/dotnet/csharp/language-reference/keywords/where-generic-type-constraint) type constraints are supported:
+
+```razor
+@typeparam TEntity where TEntity : IEntity
+```
+
+:::moniker-end
+
+For more information, see the following articles:
+
+* <xref:blazor/components/generic-type-support>
+* <xref:blazor/components/templated-components>
 
 ### `@using`
 
@@ -711,13 +810,13 @@ In [Razor components](xref:blazor/components/index), `@using` also controls whic
 
 ## Directive attributes
 
-Razor directive attributes are represented by implicit expressions with reserved keywords following the `@` symbol. A directive attribute typically changes the way an element is parsed or enables different functionality.
+Razor directive attributes are represented by implicit expressions with reserved keywords following the `@` symbol. A directive attribute typically changes the way an element is compiled or functions.
 
 ### `@attributes`
 
 *This scenario only applies to Razor components (`.razor`).*
 
-`@attributes` allows a component to render non-declared attributes. For more information, see <xref:blazor/components/index#attribute-splatting-and-arbitrary-parameters>.
+`@attributes` allows a component to render non-declared attributes. For more information, see <xref:blazor/components/attribute-splatting>.
 
 ### `@bind`
 
@@ -730,6 +829,21 @@ Data binding in components is accomplished with the `@bind` attribute. For more 
 *This scenario only applies to Razor components (`.razor`).*
 
 Use the `@bind:culture` attribute with the [`@bind`](#bind) attribute to provide a <xref:System.Globalization.CultureInfo?displayProperty=fullName> for parsing and formatting a value. For more information, see <xref:blazor/globalization-localization#globalization>.
+
+:::moniker range=">= aspnetcore-8.0"
+
+### `@formname`
+
+*This scenario only applies to Razor components (`.razor`).*
+
+`@formname` assigns a form name to a Razor component's plain HTML form or a form based on <xref:Microsoft.AspNetCore.Components.Forms.EditForm> ([`Editform` documentation](xref:blazor/forms/binding#editformeditcontext-model)). The value of `@formname` should be unique, which prevents form collisions in the following situations:
+
+* A form is placed in a component with multiple forms.
+* A form is sourced from an external class library, commonly a NuGet package, for a component with multiple forms, and the app author doesn't control the source code of the library to set a different external form name than a name used by another form in the component.
+
+For more information and examples, see <xref:blazor/forms/index>.
+
+:::moniker-end
 
 ### `@on{EVENT}`
 
@@ -753,7 +867,7 @@ Stops event propagation for the event.
 
 *This scenario only applies to Razor components (`.razor`).*
 
-The `@key` directive attribute causes the components diffing algorithm to guarantee preservation of elements or components based on the key's value. For more information, see <xref:blazor/components/index#use-key-to-control-the-preservation-of-elements-and-components>.
+The `@key` directive attribute causes the components diffing algorithm to guarantee preservation of elements or components based on the key's value. For more information, see <xref:blazor/components/key>.
 
 ### `@ref`
 
@@ -761,51 +875,9 @@ The `@key` directive attribute causes the components diffing algorithm to guaran
 
 Component references (`@ref`) provide a way to reference a component instance so that you can issue commands to that instance. For more information, see <xref:blazor/components/index#capture-references-to-components>.
 
-:::moniker range=">= aspnetcore-6.0"
-
-### `@typeparam`
-
-*This scenario only applies to Razor components (`.razor`).*
-
-The `@typeparam` directive declares a [generic type parameter](/dotnet/csharp/programming-guide/generics/generic-type-parameters) for the generated component class:
-
-```razor
-@typeparam TEntity
-```
-
-Generic types with [`where`](/dotnet/csharp/language-reference/keywords/where-generic-type-constraint) type constraints are supported:
-
-```razor
-@typeparam TEntity where TEntity : IEntity
-```
-
-For more information, see the following articles:
-
-* <xref:blazor/components/index#generic-type-parameter-support>
-* <xref:blazor/components/templated-components>
-
-:::moniker-end
-
-:::moniker range="< aspnetcore-6.0"
-
-### `@typeparam`
-
-*This scenario only applies to Razor components (`.razor`).*
-
-The `@typeparam` directive declares a [generic type parameter](/dotnet/csharp/programming-guide/generics/generic-type-parameters) for the generated component class:
-
-```razor
-@typeparam TEntity
-```
-
-For more information, see the following articles:
-
-* <xref:blazor/components/index#generic-type-parameter-support>
-* <xref:blazor/components/templated-components>
-
-:::moniker-end
-
 ## Templated Razor delegates
+
+*This scenario only applies to MVC views and Razor Pages (`.cshtml`).*
 
 Razor templates allow you to define a UI snippet with the following format:
 

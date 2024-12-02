@@ -3,7 +3,7 @@ title: ASP.NET Core SignalR JavaScript client
 author: bradygaster
 description: Overview of ASP.NET Core SignalR JavaScript client.
 monikerRange: '>= aspnetcore-3.1'
-ms.author: bradyg
+ms.author: wpickett
 ms.custom: mvc, devx-track-js
 ms.date: 1/22/2022
 uid: signalr/javascript-client
@@ -50,11 +50,11 @@ To use the client library without the npm prerequisite, reference a CDN-hosted c
 
 [!code-html[](javascript-client/samples/6.x/SignalRChat/Pages/Index.cshtml?name=snippet_CDN)]
 
-The client library is available on the following CDNs:
+In the preceding markup, version 6.0.1 is specified. Choose from one of the following CDNs to get the latest client library version:
 
 * [cdnjs](https://cdnjs.com/libraries/microsoft-signalr)
 * [jsDelivr](https://www.jsdelivr.com/package/npm/@microsoft/signalr)
-* [unpkg](https://unpkg.com/@microsoft/signalr@next/dist/browser/signalr.js)
+* [unpkg](https://unpkg.com/@microsoft/signalr/dist/browser/signalr.js)
 
 ### Install with LibMan
 
@@ -370,7 +370,7 @@ The client library is available on the following CDNs:
 
 * [cdnjs](https://cdnjs.com/libraries/microsoft-signalr)
 * [jsDelivr](https://www.jsdelivr.com/package/npm/@microsoft/signalr)
-* [unpkg](https://unpkg.com/@microsoft/signalr@next/dist/browser/signalr.js)
+* [unpkg](https://unpkg.com/@microsoft/signalr/dist/browser/signalr.js)
 
 ### Install with LibMan
 

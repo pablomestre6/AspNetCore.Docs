@@ -3,11 +3,13 @@ title: Use gRPC client with .NET Standard 2.0
 author: jamesnk
 description: Learn how to use the .NET gRPC client in apps and libraries that support .NET Standard 2.0.
 monikerRange: '>= aspnetcore-3.0'
-ms.author: jamesnk
+ms.author: wpickett
 ms.date: 3/11/2021
 uid: grpc/netstandard
 ---
 # Use gRPC client with .NET Standard 2.0
+
+[!INCLUDE[](~/includes/not-latest-version.md)]
 
 By [James Newton-King](https://twitter.com/jamesnk)
 
@@ -68,11 +70,12 @@ For more information, see [Configure gRPC-Web with the .NET gRPC client](xref:gr
 
 Requirements and restrictions to using `WinHttpHandler`:
 
-* Windows 11 or later, Windows Server 2022 or later.
+* Windows 11 or later, Windows Server 2019 or later.
+  * gRPC client is fully supported on Windows 11 or later.
+  * gRPC client is partially supported on Windows Server 2019 and Windows Server 2022. Unary and server streaming methods are supported. Client and bidirectional streaming methods are **_not_** supported.
 * A reference to [`System.Net.Http.WinHttpHandler`](https://www.nuget.org/packages/System.Net.Http.WinHttpHandler/) version 6.0.1 or later.
 * Configure `WinHttpHandler` on the channel using `GrpcChannelOptions.HttpHandler`.
 * .NET Framework 4.6.1 or later.
-* Only unary and server streaming gRPC calls are supported.
 * Only gRPC calls over TLS are supported.
 
 ```csharp

@@ -1,8 +1,8 @@
 ---
 title: Work with SameSite cookies in ASP.NET Core
-author: rick-anderson
+author: tdykstra
 description: Learn how to use to SameSite cookies in ASP.NET Core
-ms.author: riande
+ms.author: tdykstra
 monikerRange: '>= aspnetcore-2.1'
 ms.custom: mvc
 ms.date: 5/20/2022
@@ -22,7 +22,7 @@ SameSite is an [IETF](https://ietf.org/about/) draft standard designed to provid
 * Applications that use [`<iframe>`](https://developer.mozilla.org/docs/Web/HTML/Element/iframe) may experience issues with `sameSite=Lax` or `sameSite=Strict` cookies because `<iframe>` is treated as cross-site scenarios.
 * The value `SameSite=None` is not allowed by the [2016 standard](https://tools.ietf.org/html/draft-west-first-party-cookies-07) and causes some implementations to treat such cookies as `SameSite=Strict`. See [Supporting older browsers](#sob) in this document.
 
-The `SameSite=Lax` setting works for most application cookies. Some forms of authentication like [OpenID Connect](https://openid.net/connect/) (OIDC) and [WS-Federation](https://auth0.com/docs/protocols/ws-fed) default to POST based redirects. The POST based redirects trigger the SameSite browser protections, so SameSite is disabled for these components. Most [OAuth](https://oauth.net/) logins are not affected due to differences in how the request flows.
+The `SameSite=Lax` setting works for most application cookies. Some forms of authentication like [OpenID Connect](https://openid.net/developers/how-connect-works/) (OIDC) and [WS-Federation](https://auth0.com/docs/protocols/ws-fed) default to POST based redirects. The POST based redirects trigger the SameSite browser protections, so SameSite is disabled for these components. Most [OAuth](https://oauth.net/) logins are not affected due to differences in how the request flows.
 
 Each ASP.NET Core component that emits cookies needs to decide if SameSite is appropriate.
 
@@ -38,7 +38,7 @@ The following sample can be downloaded and tested:
 
 | Sample               | Document |
 | ----------------- | ------------ |
-| [.NET Core Razor Pages](https://github.com/blowdart/AspNetSameSiteSamples/tree/main/AspNetCore31RazorPages)  | <xref:security/samesite/rp31> |
+| [.NET Core Razor Pages](https://github.com/blowdart/AspNetSameSiteSamples/tree/master/AspNetCore31RazorPages) | <xref:security/samesite/rp31> |
 
 ## .NET Core support for the sameSite attribute
 
@@ -175,7 +175,7 @@ Versions of :::no-loc text="Electron"::: include older versions of Chromium. For
 
 | Sample               | Document |
 | ----------------- | ------------ |
-| [.NET Core Razor Pages](https://github.com/blowdart/AspNetSameSiteSamples/tree/main/AspNetCore31RazorPages)  | <xref:security/samesite/rp31> |
+| [.NET Core Razor Pages](https://github.com/blowdart/AspNetSameSiteSamples/tree/master/AspNetCore31RazorPages)  | <xref:security/samesite/rp31> |
 
 :::moniker-end
 
@@ -185,7 +185,7 @@ The following sample can be downloaded and tested:
 
 | Sample               | Document |
 | ----------------- | ------------ |
-| [.NET Core Razor Pages](https://github.com/blowdart/AspNetSameSiteSamples/tree/main/AspNetCore31RazorPages)  | <xref:security/samesite/rp31> |
+| [.NET Core Razor Pages](https://github.com/blowdart/AspNetSameSiteSamples/tree/master/AspNetCore31RazorPages)  | <xref:security/samesite/rp31> |
 
 ## .NET Core support for the sameSite attribute
 
@@ -325,7 +325,7 @@ Versions of :::no-loc text="Electron"::: include older versions of Chromium. For
 
 | Sample               | Document |
 | ----------------- | ------------ |
-| [.NET Core Razor Pages](https://github.com/blowdart/AspNetSameSiteSamples/tree/main/AspNetCore31RazorPages)  | <xref:security/samesite/rp31> |
+| [.NET Core Razor Pages](https://github.com/blowdart/AspNetSameSiteSamples/tree/master/AspNetCore31RazorPages)  | <xref:security/samesite/rp31> |
 
 :::moniker-end
 
@@ -335,8 +335,8 @@ The following samples can be downloaded and tested:
 
 | Sample               | Document |
 | ----------------- | ------------ |
-| [.NET Core MVC](https://github.com/blowdart/AspNetSameSiteSamples/tree/main/AspNetCore21MVC)  | <xref:security/samesite/mvc21> |
-| [.NET Core Razor Pages](https://github.com/blowdart/AspNetSameSiteSamples/tree/main/AspNetCore21RazorPages)  | <xref:security/samesite/rp21> |
+| [.NET Core MVC](https://github.com/blowdart/AspNetSameSiteSamples/tree/master/AspNetCore21MVC)  | <xref:security/samesite/mvc21> |
+| [.NET Core Razor Pages](https://github.com/blowdart/AspNetSameSiteSamples/tree/master/AspNetCore21RazorPages)  | <xref:security/samesite/rp21> |
 
 ## December patch behavior changes
 
@@ -460,7 +460,7 @@ Versions of :::no-loc text="Electron"::: include older versions of Chromium. For
 
 | Sample               | Document |
 | ----------------- | ------------ |
-| [.NET Core MVC](https://github.com/blowdart/AspNetSameSiteSamples/tree/main/AspNetCore21MVC)  | <xref:security/samesite/mvc21> |
-| [.NET Core Razor Pages](https://github.com/blowdart/AspNetSameSiteSamples/tree/main/AspNetCore21RazorPages)  | <xref:security/samesite/rp21> |
+| [.NET Core MVC](https://github.com/blowdart/AspNetSameSiteSamples/tree/master/AspNetCore21MVC)  | <xref:security/samesite/mvc21> |
+| [.NET Core Razor Pages](https://github.com/blowdart/AspNetSameSiteSamples/tree/master/AspNetCore21RazorPages)  | <xref:security/samesite/rp21> |
 
 :::moniker-end

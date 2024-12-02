@@ -10,9 +10,12 @@ uid: fundamentals/metapackage
 ---
 # Microsoft.AspNetCore.All metapackage for ASP.NET Core 2.0
 
+[!INCLUDE[](~/includes/not-latest-version.md)]
+
 :::moniker range=">= aspnetcore-3.0"
 
-The `Microsoft.AspNetCore.All` metapackage isn't included in ASP.NET Core 3.0 and later. For more information, see [this GitHub issue](https://github.com/aspnet/Announcements/issues/314).
+> [!NOTE]
+> The `Microsoft.AspNetCore.All` metapackage isn't used in ASP.NET Core 3.0 and later. For more information, see [this GitHub issue](https://github.com/aspnet/Announcements/issues/314).
 
 :::moniker-end
 

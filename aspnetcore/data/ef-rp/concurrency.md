@@ -1,8 +1,8 @@
 ---
 title: Part 8, Razor Pages with EF Core in ASP.NET Core - Concurrency
-author: rick-anderson
+author: tdykstra
 description: Part 8 of Razor Pages and Entity Framework tutorial series.
-ms.author: riande
+ms.author: tdykstra
 ms.custom: mvc
 ms.date: 07/22/2019
 uid: data/ef-rp/concurrency
@@ -417,7 +417,7 @@ The Delete page detects concurrency conflicts when the entity has changed after 
 
 Update `Pages/Departments/Delete.cshtml` with the following code:
 
-[!code-cshtml[](intro/samples/cu50/Pages/Departments/Delete.cshtml?highlight=1,10,39,42,51)]
+[!code-cshtml[](intro/samples/cu50/Pages/Departments/Delete.cshtml?highlight=1,10,39,45,51)]
 
 The preceding code makes the following changes:
 
